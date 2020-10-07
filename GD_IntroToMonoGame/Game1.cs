@@ -74,11 +74,11 @@ namespace GD_IntroToMonoGame
         protected override void Update(GameTime gameTime)
         {
 
-            System.Diagnostics.Debug.WriteLine(
-                gameTime.ElapsedGameTime.TotalMilliseconds);
+            //System.Diagnostics.Debug.WriteLine(
+            //    gameTime.ElapsedGameTime.TotalMilliseconds);
 
-            System.Diagnostics.Debug.WriteLine(
-               "\t\t" + gameTime.TotalGameTime.TotalSeconds);
+            //System.Diagnostics.Debug.WriteLine(
+            //   "\t\t" + gameTime.TotalGameTime.TotalSeconds);
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -90,7 +90,7 @@ namespace GD_IntroToMonoGame
 
         protected override void Draw(GameTime gameTime)
         {
-            System.Diagnostics.Debug.WriteLine("Draw...");
+            //System.Diagnostics.Debug.WriteLine("Draw...");
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
