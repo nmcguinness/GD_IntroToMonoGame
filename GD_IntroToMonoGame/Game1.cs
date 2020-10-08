@@ -14,6 +14,7 @@ namespace GD_IntroToMonoGame
         private Matrix projection;
         private VertexPositionColor[] vertices;
         private BasicEffect effect;
+        private float rotation;
 
         public Game1()
         {
@@ -37,7 +38,7 @@ namespace GD_IntroToMonoGame
         //play around with changing the values inside this method
         private void InitCamera()
         {
-            this.cameraPosition = new Vector3(0, 0, 20);
+            this.cameraPosition = new Vector3(0, 0, 10);
             this.cameraTarget = new Vector3(0, 0, 0);
             //camera needs a view matrix
             this.view = Matrix.CreateLookAt(cameraPosition,
@@ -53,14 +54,21 @@ namespace GD_IntroToMonoGame
         {
             //rectangle?
             this.vertices = new VertexPositionColor[4];
-            vertices[0] = new VertexPositionColor(new Vector3(0, 1, 0),
+
+            //T
+            vertices[0] = new VertexPositionColor(new Vector3(0, 2, 0),
                             Color.Red);
+
+            //BR
             vertices[1] = new VertexPositionColor(new Vector3(1, 0, 0),
                                   Color.Green);
+            //BL
             vertices[2] = new VertexPositionColor(new Vector3(-1, 0, 0),
                       Color.Blue);
-            vertices[3] = new VertexPositionColor(new Vector3(0, 1, 0),
-                      Color.Red);
+
+            //B
+            vertices[3] = new VertexPositionColor(new Vector3(0, -2, 0),
+                      Color.Yellow);
         }
 
         private void InitEffect()
@@ -106,6 +114,8 @@ namespace GD_IntroToMonoGame
             this.projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45), 4.0f / 3, 1, 1000);
 
+            this.rotation += MathHelper.ToRadians(1f);
+
             base.Update(gameTime);
         }
 
@@ -115,14 +125,17 @@ namespace GD_IntroToMonoGame
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            this.effect.World = Matrix.CreateRotationX(this.rotation*2)
+                * Matrix.CreateRotationZ(this.rotation);
+
             this.effect.View = this.view; //position
             this.effect.Projection = this.projection; //how you see world
             this.effect.CurrentTechnique.Passes[0].Apply();
 
             this._graphics.GraphicsDevice
                 .DrawUserPrimitives<VertexPositionColor>(
-                PrimitiveType.LineStrip, //I wonder what this means!
-                this.vertices, 0, 3);
+                PrimitiveType.TriangleStrip, //I wonder what this means!
+                this.vertices, 0, 2);
 
 
             base.Draw(gameTime);
