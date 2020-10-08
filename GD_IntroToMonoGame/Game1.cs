@@ -8,6 +8,7 @@ namespace GD_IntroToMonoGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Vector3 cameraPosition;
         private Matrix view;
         private Matrix projection;
         private VertexPositionColor[] vertices;
@@ -35,8 +36,9 @@ namespace GD_IntroToMonoGame
         //play around with changing the values inside this method
         private void InitCamera()
         {
+            this.cameraPosition = new Vector3(0, 0, 20);
             //camera needs a view matrix
-            this.view = Matrix.CreateLookAt(new Vector3(0, 0, 20),
+            this.view = Matrix.CreateLookAt(cameraPosition,
                 Vector3.Zero, new Vector3(0, 1, 0));
 
             this.projection = Matrix.CreatePerspectiveFieldOfView(
@@ -84,6 +86,19 @@ namespace GD_IntroToMonoGame
                 Exit();
 
             //update stuff...
+            float moveSpeed = 0.1f;
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+                this.cameraPosition -= new Vector3(0, 0, moveSpeed);
+            else if (Keyboard.GetState().IsKeyDown(Keys.S))
+                this.cameraPosition += new Vector3(0, 0, moveSpeed);
+            
+            //A/D movement to the camera?
+
+            this.view = Matrix.CreateLookAt(cameraPosition,
+                    Vector3.Zero, new Vector3(0, 1, 0));
+
+            this.projection = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.PiOver4, 4.0f / 3, 1, 10000);
 
             base.Update(gameTime);
         }
