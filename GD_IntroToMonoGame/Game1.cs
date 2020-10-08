@@ -9,6 +9,7 @@ namespace GD_IntroToMonoGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Vector3 cameraPosition;
+        private Vector3 cameraTarget;
         private Matrix view;
         private Matrix projection;
         private VertexPositionColor[] vertices;
@@ -37,9 +38,10 @@ namespace GD_IntroToMonoGame
         private void InitCamera()
         {
             this.cameraPosition = new Vector3(0, 0, 20);
+            this.cameraTarget = new Vector3(0, 0, 0);
             //camera needs a view matrix
             this.view = Matrix.CreateLookAt(cameraPosition,
-                Vector3.Zero, new Vector3(0, 1, 0));
+                cameraTarget, new Vector3(0, 1, 0));
 
             this.projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, 4.0f / 3, 1, 10000);
@@ -49,6 +51,7 @@ namespace GD_IntroToMonoGame
         //play around with changing the values inside this method
         private void InitVertices()
         {
+            //rectangle?
             this.vertices = new VertexPositionColor[4];
             vertices[0] = new VertexPositionColor(new Vector3(0, 1, 0),
                             Color.Red);
@@ -75,13 +78,6 @@ namespace GD_IntroToMonoGame
 
         protected override void Update(GameTime gameTime)
         {
-
-            //System.Diagnostics.Debug.WriteLine(
-            //    gameTime.ElapsedGameTime.TotalMilliseconds);
-
-            //System.Diagnostics.Debug.WriteLine(
-            //   "\t\t" + gameTime.TotalGameTime.TotalSeconds);
-
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -91,14 +87,24 @@ namespace GD_IntroToMonoGame
                 this.cameraPosition -= new Vector3(0, 0, moveSpeed);
             else if (Keyboard.GetState().IsKeyDown(Keys.S))
                 this.cameraPosition += new Vector3(0, 0, moveSpeed);
-            
+
             //A/D movement to the camera?
+            float strafeSpeed = 0.05f;
+            if (Keyboard.GetState().IsKeyDown(Keys.A)){
+                this.cameraPosition -= new Vector3(strafeSpeed, 0, 0);
+                this.cameraTarget -= new Vector3(strafeSpeed, 0, 0);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.D)){
+                this.cameraPosition += new Vector3(strafeSpeed, 0, 0);
+                this.cameraTarget += new Vector3(strafeSpeed, 0, 0);
+            }
+
 
             this.view = Matrix.CreateLookAt(cameraPosition,
-                    Vector3.Zero, new Vector3(0, 1, 0));
+                    cameraTarget, new Vector3(0, 1, 0));
 
             this.projection = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.PiOver4, 4.0f / 3, 1, 10000);
+                MathHelper.ToRadians(45), 4.0f / 3, 1, 1000);
 
             base.Update(gameTime);
         }
@@ -109,8 +115,8 @@ namespace GD_IntroToMonoGame
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.effect.View = this.view;
-            this.effect.Projection = this.projection;
+            this.effect.View = this.view; //position
+            this.effect.Projection = this.projection; //how you see world
             this.effect.CurrentTechnique.Passes[0].Apply();
 
             this._graphics.GraphicsDevice
