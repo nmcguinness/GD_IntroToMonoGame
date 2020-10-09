@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace GD_IntroToMonoGame
 {
@@ -32,7 +33,14 @@ namespace GD_IntroToMonoGame
             InitVertices();
             InitEffect();
 
+            InitGraphicsSettings();
+
             base.Initialize();
+        }
+
+        private void InitGraphicsSettings()
+        {
+            //to do...
         }
 
         //play around with changing the values inside this method
@@ -124,6 +132,8 @@ namespace GD_IntroToMonoGame
             //System.Diagnostics.Debug.WriteLine("Draw...");
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+      
 
             this.effect.World = Matrix.CreateRotationX(this.rotation*2)
                 * Matrix.CreateRotationZ(this.rotation);
