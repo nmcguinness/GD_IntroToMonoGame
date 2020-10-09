@@ -15,7 +15,8 @@ namespace GD_IntroToMonoGame
         private Matrix projection;
         private VertexPositionColor[] vertices;
         private BasicEffect effect;
-        private float rotation;
+        private VertexData v1;
+        private VertexData v2;
 
         public Game1()
         {
@@ -32,10 +33,19 @@ namespace GD_IntroToMonoGame
             InitCamera();
             InitVertices();
             InitEffect();
-
             InitGraphicsSettings();
 
+            InitPrimitives();
+
             base.Initialize();
+        }
+
+        private void InitPrimitives()
+        {
+            this.v1 = new VertexData(this.vertices,
+                PrimitiveType.TriangleStrip, 2);
+
+            this.v2 = v1.Clone() as VertexData;
         }
 
         private void InitGraphicsSettings()
@@ -122,31 +132,21 @@ namespace GD_IntroToMonoGame
             this.projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45), 4.0f / 3, 1, 1000);
 
-            this.rotation += MathHelper.ToRadians(1f);
-
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            //System.Diagnostics.Debug.WriteLine("Draw...");
-
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-      
+            this.v1.Draw(this.effect, Matrix.Identity,
+                this.view, this.projection, this._graphics.GraphicsDevice);
 
-            this.effect.World = Matrix.CreateRotationX(this.rotation*2)
-                * Matrix.CreateRotationZ(this.rotation);
-
-            this.effect.View = this.view; //position
-            this.effect.Projection = this.projection; //how you see world
-            this.effect.CurrentTechnique.Passes[0].Apply();
-
-            this._graphics.GraphicsDevice
-                .DrawUserPrimitives<VertexPositionColor>(
-                PrimitiveType.TriangleStrip, //I wonder what this means!
-                this.vertices, 0, 2);
-
+            this.v2.Draw(this.effect, 
+                Matrix.Identity 
+                * Matrix.CreateScale(new Vector3(1, 3, 1))
+                * Matrix.CreateTranslation(new Vector3(5, 0, 0)),
+             this.view, this.projection, this._graphics.GraphicsDevice);
 
             base.Draw(gameTime);
         }
