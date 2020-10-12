@@ -6,7 +6,7 @@ namespace GDLibrary
     /// <summary>
     /// Encapsulates the projection matrix specific parameters for the camera class
     /// </summary>
-    public class ProjectionParameters 
+    public class ProjectionParameters : ICloneable
     {
         #region Statics
         /// <summary>
@@ -193,13 +193,12 @@ namespace GDLibrary
         #region Constructors & Core
 
         /// <summary>
-        /// Constructor for the ProjectionParameters object
+        /// Constructor for the ProjectionParameters object used by the Camera3D
         /// </summary>
-        /// <param name="fieldOfView">Floating-point value representing...</param>
-        /// <param name="aspectRatio">Floating-point value representing...</param>
-        /// <param name="nearClipPlane">Floating-point value representing...</param>
-        /// <param name="farClipPlane">Floating-point value representing...</param>
-        /// See <see cref="Math.Random()"/> Math.Random for more info
+        /// <param name="fieldOfView">Field-of-view, normally expressed in radians</param>
+        /// <param name="aspectRatio">Aspect ratio - this value normally is directly proportionate to the WxH resolution of the game...</param>
+        /// <param name="nearClipPlane">Distance of the near clipping plane from the camera</param>
+        /// <param name="farClipPlane">Distance of the far clipping plane from the camera</param>
         public ProjectionParameters(float fieldOfView, float aspectRatio,
             float nearClipPlane, float farClipPlane)
         {
@@ -209,7 +208,25 @@ namespace GDLibrary
             this.FarClipPlane = farClipPlane;
         }
 
-        //to do - Clone, Equals, GetHashCode
+        public object Clone()
+        {
+            //deep-copy - can use MemberwiseClone since all fields are value types
+            return this.MemberwiseClone();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ProjectionParameters parameters &&
+                   fieldOfView == parameters.fieldOfView &&
+                   aspectRatio == parameters.aspectRatio &&
+                   nearClipPlane == parameters.nearClipPlane &&
+                   farClipPlane == parameters.farClipPlane;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(fieldOfView, aspectRatio, nearClipPlane, farClipPlane);
+        }
         #endregion
 
     }
