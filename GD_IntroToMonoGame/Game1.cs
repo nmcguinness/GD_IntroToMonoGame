@@ -151,6 +151,9 @@ namespace GDLibrary
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            this.effect.TextureEnabled = true;
+            this.effect.Texture = this.texture;
+
             this.vertexData.Draw(this.effect,
                 Matrix.Identity, this.view,
                 ProjectionParameters.StandardDeepSixteenTen.Projection,
