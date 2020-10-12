@@ -17,5 +17,6 @@
 - [ ] Add ObjectManager
 - [ ] Add ContentDictionary
 - [ ] Organise new classes into folder structure
+- [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag
 
 

@@ -15,6 +15,8 @@ namespace GDLibrary
         private BasicEffect effect;
         private VertexPositionColorTexture[] vertices;
         private Texture2D texture;
+        private Texture2D backSky;
+        private Texture2D leftSky;
         private VertexData<VertexPositionColorTexture> vertexData;
 
         public Game1()
@@ -42,7 +44,14 @@ namespace GDLibrary
 
         private void InitTextures()
         {
-            this.texture = Content.Load<Texture2D>("Assets/Textures/Props/Crates/crate1");
+            this.texture 
+                = Content.Load<Texture2D>("Assets/Textures/Props/Crates/crate1");
+
+            //step 1 - texture
+            this.backSky
+                = Content.Load<Texture2D>("Assets/Textures/Skybox/back");
+            this.leftSky
+               = Content.Load<Texture2D>("Assets/Textures/Skybox/left");
         }
 
         private void InitPrimitives()
@@ -97,13 +106,14 @@ namespace GDLibrary
             //BR
             vertices[3] = new VertexPositionColorTexture(
                 new Vector3(halfLength, -halfLength, 0),
-                Color.Yellow, new Vector2(1, 1));
+                Color.White, new Vector2(1, 1));
         }
 
         private void InitEffect()
         {
             this.effect = new BasicEffect(this._graphics.GraphicsDevice);
             this.effect.VertexColorEnabled = true; //otherwise we wont see RGB
+            this.effect.TextureEnabled = true;
         }
 
         protected override void LoadContent()
@@ -119,7 +129,7 @@ namespace GDLibrary
                 Exit();
 
             //update stuff...
-            float moveSpeed = 0.1f;
+            float moveSpeed = 0.5f;
             if (Keyboard.GetState().IsKeyDown(Keys.W))
                 this.cameraPosition -= new Vector3(0, 0, moveSpeed);
             else if (Keyboard.GetState().IsKeyDown(Keys.S))
@@ -147,18 +157,33 @@ namespace GDLibrary
             base.Update(gameTime);
         }
 
+        float worldScale = 500;
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.effect.TextureEnabled = true;
-            this.effect.Texture = this.texture;
-
+            //draw vertexdata with front texture and front world matrix
+            //step 2 - set texture
+            this.effect.Texture = this.backSky;
+            //step 3 - scale and translation
             this.vertexData.Draw(this.effect,
-                Matrix.Identity, this.view,
-                ProjectionParameters.StandardDeepSixteenTen.Projection,
-                this._graphics.GraphicsDevice);
-         
+                Matrix.Identity 
+                * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
+                * Matrix.CreateTranslation(0, 0, -worldScale/2.0f),
+                this.view, this.projection, this._graphics.GraphicsDevice);
+
+
+            //draw vertexdata with left texture and left world matrix
+            this.effect.Texture = this.leftSky;
+            this.vertexData.Draw(this.effect,
+                Matrix.Identity
+                * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
+                * Matrix.CreateRotationY(MathHelper.ToRadians(90))
+                * Matrix.CreateTranslation(-worldScale / 2.0f, 0, 0),
+                this.view, this.projection, this._graphics.GraphicsDevice);
+
+
+
 
             base.Draw(gameTime);
         }
