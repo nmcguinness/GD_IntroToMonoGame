@@ -19,7 +19,7 @@ namespace GDLibrary
         {
             get
             {
-                return new ProjectionParameters(MathHelper.PiOver2, 4.0f / 3, 0.1f, 2500);
+                return new ProjectionParameters(MathHelper.PiOver2, 4.0f / 3, 1, 2500);
             }
         }
 
@@ -33,7 +33,7 @@ namespace GDLibrary
         {
             get
             {
-                return new ProjectionParameters(MathHelper.PiOver2, 16.0f / 10, 1, 2500);
+                return new ProjectionParameters(MathHelper.PiOver2, 16.0f / 10, 0.1f, 2500);
             }
         }
 
@@ -168,7 +168,7 @@ namespace GDLibrary
             }
             set
             {
-                this.farClipPlane = value;
+                this.farClipPlane = value; //validation
             }
         }
 
@@ -191,6 +191,15 @@ namespace GDLibrary
         #endregion
 
         #region Constructors & Core
+
+        /// <summary>
+        /// Constructor for the ProjectionParameters object
+        /// </summary>
+        /// <param name="fieldOfView">Floating-point value representing...</param>
+        /// <param name="aspectRatio">Floating-point value representing...</param>
+        /// <param name="nearClipPlane">Floating-point value representing...</param>
+        /// <param name="farClipPlane">Floating-point value representing...</param>
+        /// See <see cref="Math.Random()"/> Math.Random for more info
         public ProjectionParameters(float fieldOfView, float aspectRatio,
             float nearClipPlane, float farClipPlane)
         {

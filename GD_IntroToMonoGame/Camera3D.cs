@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GD_IntroToMonoGame
+namespace GDLibrary
 {
     /// <summary>
     /// Holds data related to a camera (e.g. transform3D, view, projection)

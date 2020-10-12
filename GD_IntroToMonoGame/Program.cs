@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GD_IntroToMonoGame
+namespace GDLibrary
 {
     public static class Program
     {

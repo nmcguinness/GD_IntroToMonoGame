@@ -1,4 +1,4 @@
-﻿namespace GD_IntroToMonoGame
+﻿namespace GDLibrary
 {
     /// <summary>
     /// Holds data related to the view matrix for the camera

@@ -10,7 +10,6 @@
 - [x] Added assets to the Content.mgcb file. See [MonoGame Tutorial: Textures and SpriteBatch](https://gamefromscratch.com/monogame-tutorial-textures-and-spritebatch/)
 - [ ] Rename default namespace to GDLibrary
 - [ ] Add generic class for VertexData
-
 - [ ] Explain and use VertexFactory
 - [ ] Add SkyBox
 - [ ] Add Transform3D

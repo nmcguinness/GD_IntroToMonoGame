@@ -2,15 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace GD_IntroToMonoGame
+namespace GDLibrary
 {
     /// <summary>
     /// Holds vertex array, primitive type and primitive count for drawn primitive
     /// </summary>
-    public class VertexData : ICloneable
+    public class VertexData<T> : ICloneable where T : struct, IVertexType
     {
         #region Fields
-        private VertexPositionColor[] vertices;
+        private T[] vertices;
         private PrimitiveType primitiveType;
         private int primitiveCount;
         #endregion
@@ -19,7 +19,7 @@ namespace GD_IntroToMonoGame
 
         #endregion
 
-        public VertexData(VertexPositionColor[] vertices, 
+        public VertexData(T[] vertices, 
             PrimitiveType primitiveType, int primitiveCount)
         {
             this.vertices = vertices;
@@ -30,8 +30,6 @@ namespace GD_IntroToMonoGame
         public object Clone()
         {
             return this;
-        //    return new VertexData(this.vertices.Clone() as VertexPositionColor[], 
-         //       this.primitiveType, this.primitiveCount);
         }
 
         public void Draw(BasicEffect effect, 
@@ -42,7 +40,7 @@ namespace GD_IntroToMonoGame
             effect.View = view;
             effect.Projection = projection;
             effect.CurrentTechnique.Passes[0].Apply();
-            graphicsDevice.DrawUserPrimitives<VertexPositionColor>(
+            graphicsDevice.DrawUserPrimitives<T>(
                 this.primitiveType,
                 this.vertices, 0, this.primitiveCount);
         }

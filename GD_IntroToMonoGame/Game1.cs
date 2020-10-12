@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
-namespace GD_IntroToMonoGame
+namespace GDLibrary
 {
     public class Game1 : Game
     {
@@ -16,6 +15,7 @@ namespace GD_IntroToMonoGame
         private BasicEffect effect;
         private VertexPositionColorTexture[] vertices;
         private Texture2D texture;
+        private VertexData<VertexPositionColorTexture> vertexData;
 
         public Game1()
         {
@@ -47,7 +47,8 @@ namespace GD_IntroToMonoGame
 
         private void InitPrimitives()
         {
-
+            this.vertexData = new VertexData<VertexPositionColorTexture>(
+                this.vertices, PrimitiveType.TriangleStrip, 2);
         }
 
         private void InitGraphicsSettings()
@@ -81,17 +82,17 @@ namespace GD_IntroToMonoGame
             //TL
             vertices[0] = new VertexPositionColorTexture(
                 new Vector3(-halfLength, halfLength, 0),
-                new Color(255,0,0,127), new Vector2(0, 0));
+                new Color(255,255,255,255), new Vector2(0, 0));
 
             //BL
             vertices[1] = new VertexPositionColorTexture(
                 new Vector3(-halfLength, -halfLength, 0),
-                Color.Green, new Vector2(0, 1));
+                Color.White, new Vector2(0, 1));
 
             //TR
             vertices[2] = new VertexPositionColorTexture(
                 new Vector3(halfLength, halfLength, 0),
-                Color.Blue, new Vector2(1, 0));
+                Color.White, new Vector2(1, 0));
 
             //BR
             vertices[3] = new VertexPositionColorTexture(
@@ -135,12 +136,13 @@ namespace GD_IntroToMonoGame
                 this.cameraTarget += new Vector3(strafeSpeed, 0, 0);
             }
 
-
             this.view = Matrix.CreateLookAt(cameraPosition,
                     cameraTarget, new Vector3(0, 1, 0));
 
-            this.projection = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.ToRadians(45), 4.0f / 3, 1, 1000);
+            this.projection = ProjectionParameters.StandardDeepSixteenTen.Projection;
+
+                //Matrix.CreatePerspectiveFieldOfView(
+                //MathHelper.ToRadians(45), 4.0f / 3, 1, 1000);
 
             base.Update(gameTime);
         }
@@ -149,15 +151,11 @@ namespace GD_IntroToMonoGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.effect.World = Matrix.Identity;
-            this.effect.View = view;
-            this.effect.Projection = projection;
-            this.effect.TextureEnabled = true;
-            this.effect.Texture = this.texture;
-            this.effect.CurrentTechnique.Passes[0].Apply();
-
-            this._graphics.GraphicsDevice.DrawUserPrimitives<VertexPositionColorTexture>(
-                PrimitiveType.TriangleStrip, this.vertices, 0, 2);
+            this.vertexData.Draw(this.effect,
+                Matrix.Identity, this.view,
+                ProjectionParameters.StandardDeepSixteenTen.Projection,
+                this._graphics.GraphicsDevice);
+         
 
             base.Draw(gameTime);
         }
