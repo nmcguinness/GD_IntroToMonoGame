@@ -13,10 +13,9 @@ namespace GD_IntroToMonoGame
         private Vector3 cameraTarget;
         private Matrix view;
         private Matrix projection;
-        private VertexPositionColor[] vertices;
         private BasicEffect effect;
-        private VertexData v1;
-        private VertexData v2;
+        private VertexPositionColorTexture[] vertices;
+        private Texture2D texture;
 
         public Game1()
         {
@@ -32,31 +31,36 @@ namespace GD_IntroToMonoGame
 
             InitCamera();
             InitVertices();
+            InitTextures();
+            InitPrimitives();
+
             InitEffect();
             InitGraphicsSettings();
-
-            InitPrimitives();
 
             base.Initialize();
         }
 
+        private void InitTextures()
+        {
+            this.texture = Content.Load<Texture2D>("Assets/Textures/Props/Crates/crate1");
+        }
+
         private void InitPrimitives()
         {
-            this.v1 = new VertexData(this.vertices,
-                PrimitiveType.TriangleStrip, 2);
 
-            this.v2 = v1.Clone() as VertexData;
         }
 
         private void InitGraphicsSettings()
         {
-            //to do...
+            RasterizerState rs = new RasterizerState();
+            rs.CullMode = CullMode.None;
+            this._graphics.GraphicsDevice.RasterizerState = rs;
         }
 
         //play around with changing the values inside this method
         private void InitCamera()
         {
-            this.cameraPosition = new Vector3(0, 0, 10);
+            this.cameraPosition = new Vector3(0, 0, 5);
             this.cameraTarget = new Vector3(0, 0, 0);
             //camera needs a view matrix
             this.view = Matrix.CreateLookAt(cameraPosition,
@@ -70,23 +74,29 @@ namespace GD_IntroToMonoGame
         //play around with changing the values inside this method
         private void InitVertices()
         {
-            //rectangle?
-            this.vertices = new VertexPositionColor[4];
+            this.vertices
+                = new VertexPositionColorTexture[4];
 
-            //T
-            vertices[0] = new VertexPositionColor(new Vector3(0, 2, 0),
-                            Color.Red);
+            float halfLength = 0.5f;
+            //TL
+            vertices[0] = new VertexPositionColorTexture(
+                new Vector3(-halfLength, halfLength, 0),
+                new Color(255,0,0,127), new Vector2(0, 0));
+
+            //BL
+            vertices[1] = new VertexPositionColorTexture(
+                new Vector3(-halfLength, -halfLength, 0),
+                Color.Green, new Vector2(0, 1));
+
+            //TR
+            vertices[2] = new VertexPositionColorTexture(
+                new Vector3(halfLength, halfLength, 0),
+                Color.Blue, new Vector2(1, 0));
 
             //BR
-            vertices[1] = new VertexPositionColor(new Vector3(1, 0, 0),
-                                  Color.Green);
-            //BL
-            vertices[2] = new VertexPositionColor(new Vector3(-1, 0, 0),
-                      Color.Blue);
-
-            //B
-            vertices[3] = new VertexPositionColor(new Vector3(0, -2, 0),
-                      Color.Yellow);
+            vertices[3] = new VertexPositionColorTexture(
+                new Vector3(halfLength, -halfLength, 0),
+                Color.Yellow, new Vector2(1, 1));
         }
 
         private void InitEffect()
@@ -139,14 +149,15 @@ namespace GD_IntroToMonoGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.v1.Draw(this.effect, Matrix.Identity,
-                this.view, this.projection, this._graphics.GraphicsDevice);
+            this.effect.World = Matrix.Identity;
+            this.effect.View = view;
+            this.effect.Projection = projection;
+            this.effect.TextureEnabled = true;
+            this.effect.Texture = this.texture;
+            this.effect.CurrentTechnique.Passes[0].Apply();
 
-            this.v2.Draw(this.effect, 
-                Matrix.Identity 
-                * Matrix.CreateScale(new Vector3(1, 3, 1))
-                * Matrix.CreateTranslation(new Vector3(5, 0, 0)),
-             this.view, this.projection, this._graphics.GraphicsDevice);
+            this._graphics.GraphicsDevice.DrawUserPrimitives<VertexPositionColorTexture>(
+                PrimitiveType.TriangleStrip, this.vertices, 0, 2);
 
             base.Draw(gameTime);
         }
