@@ -33,12 +33,12 @@ namespace GDLibrary
         }
 
         public void Draw(BasicEffect effect, 
-            Matrix world, Matrix view, Matrix projection,
+            Matrix world, Camera3D camera3D,
             GraphicsDevice graphicsDevice)
         {
             effect.World = world;
-            effect.View = view;
-            effect.Projection = projection;
+            effect.View = camera3D.View;
+            effect.Projection = camera3D.Projection;
             effect.CurrentTechnique.Passes[0].Apply();
             graphicsDevice.DrawUserPrimitives<T>(
                 this.primitiveType,

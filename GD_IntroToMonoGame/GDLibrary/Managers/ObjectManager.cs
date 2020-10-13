@@ -1,15 +1,16 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace GDLibrary
 {
-    public class ObjectManager<T> where T : struct, IVertexType
+    public class ObjectManager<Actor> where T : struct, IVertexType
     {
+        
+        private List<Actor> drawnList;
         /*
-        private List<VertexData<T>> drawnList;
-
         public ObjectManager(int initialDrawCount)
         {
             this.drawnList = new List<VertexData<T>>(initialDrawCount);
@@ -20,12 +21,13 @@ namespace GDLibrary
             this.drawnList.Add(vertexData);
         }
 
-        public void Draw()
+        public void Draw(Matrix view, Matrix projection, 
+                            GraphicsDevice graphicsDevice)
         {
             foreach(VertexData<T> vertexData in this.drawnList){
-                vertexData.Draw(this.effect, this.world,
-                    this.view, this.projection,
-                    this.GraphicsDevice);
+                vertexData.Draw(effect, this.world,
+                    view, projection,
+                    graphicsDevice);
             }
         }
         */

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace GDLibrary
 {
@@ -8,16 +9,17 @@ namespace GDLibrary
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Vector3 cameraPosition, cameraTarget;
-        private Matrix view, projection;
         private BasicEffect effect;
         private VertexPositionColorTexture[] vertices;
         private Texture2D backSky, leftSky, rightSky, frontSky, topSky, grass;
         private VertexData<VertexPositionColorTexture> vertexData;
+        private Camera3D camera3D;
+
 
         private float moveSpeed = 5;
         private float strafeSpeed = 5;
         private float worldScale = 5000;
+    
 
         public Main()
         {
@@ -31,7 +33,7 @@ namespace GDLibrary
             // TODO: Add your initialization logic here
             Window.Title = "My Amazing Game";
 
-            InitCamera();
+            InitCameras3D();
             InitVertices();
             InitTextures();
             InitPrimitives();
@@ -40,6 +42,16 @@ namespace GDLibrary
             InitGraphicsSettings(1024, 768);
 
             base.Initialize();
+        }
+
+        private void InitCameras3D()
+        {
+            Transform3D transform3D = new Transform3D(new Vector3(0, 25, 50),
+                Vector3.Zero, Vector3.Zero, 
+                            new Vector3(0, 0, -1), Vector3.UnitY);
+
+            this.camera3D = new Camera3D("simple 1st person", transform3D,
+                ProjectionParameters.StandardDeepSixteenTen);
         }
 
         private void InitTextures()
@@ -88,20 +100,6 @@ namespace GDLibrary
         }
 
         //play around with changing the values inside this method
-        private void InitCamera()
-        {
-            this.cameraPosition = new Vector3(0, 25, 25);
-            this.cameraTarget = new Vector3(0, 25, 0);
-            //camera needs a view matrix
-            this.view = Matrix.CreateLookAt(cameraPosition,
-                cameraTarget, new Vector3(0, 1, 0));
-
-            this.projection = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.PiOver4, 4.0f / 3, 1, 10000);
-            
-        }
-
-        //play around with changing the values inside this method
         private void InitVertices()
         {
             this.vertices
@@ -146,30 +144,36 @@ namespace GDLibrary
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //update stuff...
-   
-            if (Keyboard.GetState().IsKeyDown(Keys.W)){
-                this.cameraPosition -= new Vector3(0, 0, moveSpeed);
-                this.cameraTarget -= new Vector3(0, 0, moveSpeed);
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            {
+                this.camera3D.Transform3D.TranslateBy(
+                    moveSpeed * this.camera3D.Transform3D.Look);
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.S)) { 
-                this.cameraPosition += new Vector3(0, 0, moveSpeed);
-                this.cameraTarget -= new Vector3(0, 0, moveSpeed);
-            }
-
-            //A/D movement to the camera?
-
-            if (Keyboard.GetState().IsKeyDown(Keys.A)){
-                this.cameraPosition -= new Vector3(strafeSpeed, 0, 0);
-                this.cameraTarget -= new Vector3(strafeSpeed, 0, 0);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.D)){
-                this.cameraPosition += new Vector3(strafeSpeed, 0, 0);
-                this.cameraTarget += new Vector3(strafeSpeed, 0, 0);
+            else if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                this.camera3D.Transform3D.TranslateBy(
+                     -1 * moveSpeed * this.camera3D.Transform3D.Look);
             }
 
-            this.view = Matrix.CreateLookAt(cameraPosition,
-                    cameraTarget, new Vector3(0, 1, 0));
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                this.camera3D.Transform3D.TranslateBy(
+                    -1 * strafeSpeed * this.camera3D.Transform3D.Right);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                this.camera3D.Transform3D.TranslateBy(
+                     strafeSpeed * this.camera3D.Transform3D.Right);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.NumPad4))
+            {
+                this.camera3D.Transform3D.RotateAroundUpBy(-1);
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                this.camera3D.Transform3D.RotateAroundUpBy(1);
+            }
 
             base.Update(gameTime);
         }
@@ -187,7 +191,7 @@ namespace GDLibrary
                 Matrix.Identity 
                 * Matrix.CreateScale(new Vector3(worldScale, worldScale, 20))
                 * Matrix.CreateTranslation(0, 0, -worldScale/2.0f),
-                this.view, this.projection, this._graphics.GraphicsDevice);
+                this.camera3D, this._graphics.GraphicsDevice);
 
             //draw vertexdata with left texture and left world matrix
             this.effect.Texture = this.leftSky;
@@ -196,7 +200,7 @@ namespace GDLibrary
                 * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
                 * Matrix.CreateRotationY(MathHelper.ToRadians(90))
                 * Matrix.CreateTranslation(-worldScale / 2.0f, 0, 0),
-                this.view, this.projection, this._graphics.GraphicsDevice);
+                 this.camera3D, this._graphics.GraphicsDevice);
 
 
             //draw vertexdata with right texture and right world matrix
@@ -206,7 +210,7 @@ namespace GDLibrary
                 * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
                 * Matrix.CreateRotationY(MathHelper.ToRadians(-90))
                 * Matrix.CreateTranslation(worldScale / 2.0f, 0, 0),
-                this.view, this.projection, this._graphics.GraphicsDevice);
+                 this.camera3D, this._graphics.GraphicsDevice);
 
             //draw vertexdata with top texture and top world matrix
             this.effect.Texture = this.topSky;
@@ -216,7 +220,7 @@ namespace GDLibrary
                 * Matrix.CreateRotationX(MathHelper.ToRadians(90))
                 * Matrix.CreateRotationY(MathHelper.ToRadians(-90))
                 * Matrix.CreateTranslation(0, worldScale / 2.0f, 0),
-                this.view, this.projection, this._graphics.GraphicsDevice);
+                 this.camera3D, this._graphics.GraphicsDevice);
 
             //draw vertexdata with front texture and front world matrix
             //step 2 - set texture
@@ -227,7 +231,7 @@ namespace GDLibrary
                 * Matrix.CreateScale(new Vector3(worldScale, worldScale, 20))
                 * Matrix.CreateRotationY(MathHelper.ToRadians(180))
                 * Matrix.CreateTranslation(0, 0, worldScale / 2.0f),
-                this.view, this.projection, this._graphics.GraphicsDevice);
+                 this.camera3D, this._graphics.GraphicsDevice);
 
             //draw vertexdata with grass texture and grass world matrix
             this.effect.Texture = this.grass;
@@ -236,7 +240,7 @@ namespace GDLibrary
                 * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
                 * Matrix.CreateRotationX(MathHelper.ToRadians(90))
                 * Matrix.CreateTranslation(0, 0, 0),
-                this.view, this.projection, this._graphics.GraphicsDevice);
+                 this.camera3D, this._graphics.GraphicsDevice);
 
             base.Draw(gameTime);
         }

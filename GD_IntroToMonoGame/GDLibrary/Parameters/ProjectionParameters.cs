@@ -33,7 +33,7 @@ namespace GDLibrary
         {
             get
             {
-                return new ProjectionParameters(MathHelper.PiOver2, 16.0f / 10, 0.1f, 2500);
+                return new ProjectionParameters(MathHelper.PiOver2, 16.0f / 10, 0.1f, 10000);
             }
         }
 

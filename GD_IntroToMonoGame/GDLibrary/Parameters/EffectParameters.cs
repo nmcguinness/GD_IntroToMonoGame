@@ -116,7 +116,7 @@ namespace GDLibrary
         /// <param name="alpha">Floating-point tansparency value</param>
         public EffectParameters(BasicEffect effect, Texture2D texture, Color diffusecolor, float alpha)
         {
-            Effect = effect;
+            this.Effect = effect;
 
             if (texture != null)
                 Texture = texture;
@@ -124,11 +124,14 @@ namespace GDLibrary
             DiffuseColor = diffuseColor;
 
             //use Property to ensure values are inside correct ranges
-            Alpha = alpha;
+            this.Alpha = alpha;
         }
+
+        //to do...
 
         public object Clone()
         {
+            //hybrid - shallow and deep
             return new EffectParameters(this.effect, //ref - shallow
                 this.texture,  //ref - shallow
                 this.diffuseColor, //in-built type - so deep
