@@ -9,9 +9,10 @@
 ### Week 3
 - [x] Added ProjectionParamters to encapsulate projection matrix.
 - [x] Added assets to the Content.mgcb file. See [MonoGame Tutorial: Textures and SpriteBatch](https://gamefromscratch.com/monogame-tutorial-textures-and-spritebatch/)
-- [ ] Rename default namespace to GDLibrary
+- [x] Rename default namespace to GDLibrary
 - [x] Add generic class for VertexData
-- [ ] Add EffectParameters
+- [x] Added folder system and organised existing files
+- [x] Add EffectParameters
 - [ ] Add PrimitiveObject
 - [ ] Explain and use VertexFactory
 - [ ] Add SkyBox
