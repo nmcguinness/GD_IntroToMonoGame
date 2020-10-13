@@ -15,9 +15,12 @@
 - [x] Add EffectParameters
 - [ ] Add PrimitiveObject
 - [ ] Explain and use VertexFactory
-- [ ] Add SkyBox
+- [x] Add SkyBox
 - [ ] Add Transform3D
-- [ ] Add IActor, Actor3D, Camera3D, PrimitiveObject hierarchy
+- [ ] Add IActor
+- [ ] Actor3D
+- [ ] Camera3D 
+- [ ] PrimitiveObject
 - [ ] Add ObjectManager
 - [ ] Add ContentDictionary
 - [ ] Organise new classes into folder structure
