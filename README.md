@@ -18,9 +18,9 @@
 - [x] Add SkyBox
 - [ ] Add Transform3D
 - [ ] Add IActor
-- [ ] Actor3D
-- [ ] Camera3D 
-- [ ] PrimitiveObject
+- [ ] Add Actor3D
+- [ ] Add Camera3D 
+- [ ] Add PrimitiveObject
 - [ ] Add ObjectManager
 - [ ] Add ContentDictionary
 - [ ] Organise new classes into folder structure
