@@ -98,7 +98,7 @@ namespace GDLibrary
 
             this.projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, 4.0f / 3, 1, 10000);
-
+            
         }
 
         //play around with changing the values inside this method
