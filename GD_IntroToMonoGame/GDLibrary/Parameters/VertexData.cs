@@ -7,7 +7,7 @@ namespace GDLibrary
     /// <summary>
     /// Holds vertex array, primitive type and primitive count for drawn primitive
     /// </summary>
-    public class VertexData<T> : ICloneable where T : struct, IVertexType
+    public class VertexData<T> : IVertexData, ICloneable where T : struct, IVertexType
     {
         #region Fields
         private T[] vertices;
@@ -32,6 +32,13 @@ namespace GDLibrary
             return this;
         }
 
+
+        public void Draw(GameTime gameTime, BasicEffect effect, GraphicsDevice graphicsDevice)
+        {
+            graphicsDevice.DrawUserPrimitives<T>(this.primitiveType,
+                this.vertices, 0, this.primitiveCount);
+        }
+        /*
         public void Draw(BasicEffect effect, 
             Matrix world, Camera3D camera3D,
             GraphicsDevice graphicsDevice)
@@ -44,7 +51,7 @@ namespace GDLibrary
                 this.primitiveType,
                 this.vertices, 0, this.primitiveCount);
         }
-
+        */
 
     }
 }

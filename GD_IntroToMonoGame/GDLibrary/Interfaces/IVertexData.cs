@@ -8,6 +8,6 @@ namespace GDLibrary
     /// </summary>
     public interface IVertexData
     {
-        void Draw(GameTime gameTime, Effect effect);
+        void Draw(GameTime gameTime, BasicEffect effect, GraphicsDevice graphicsDevice);
     }
 }

@@ -1,6 +1,9 @@
-﻿namespace GDLibrary
+﻿using GD_IntroToMonoGame.GDLibrary.Interfaces;
+using Microsoft.Xna.Framework;
+
+namespace GDLibrary
 {
-    public class Actor
+    public class Actor : IActor
     {
         private string id;
         private string description;
@@ -11,6 +14,9 @@
             this.id = id;
         }
 
-
+        public void Update(GameTime gameTime)
+        {
+            //does nothing
+        }
     }
 }

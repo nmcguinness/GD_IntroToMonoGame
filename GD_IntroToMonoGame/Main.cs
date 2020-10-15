@@ -14,12 +14,12 @@ namespace GDLibrary
         private Texture2D backSky, leftSky, rightSky, frontSky, topSky, grass;
         private VertexData<VertexPositionColorTexture> vertexData;
         private Camera3D camera3D;
+        private PrimitiveObject archetypalPrimitiveObject;
 
-
-        private float moveSpeed = 5;
-        private float strafeSpeed = 5;
+        private float moveSpeed = 0.5f;
+        private float strafeSpeed = 1;
         private float worldScale = 5000;
-    
+
 
         public Main()
         {
@@ -36,9 +36,9 @@ namespace GDLibrary
             InitCameras3D();
             InitVertices();
             InitTextures();
+            InitEffect();
             InitPrimitives();
 
-            InitEffect();
             InitGraphicsSettings(1024, 768);
 
             base.Initialize();
@@ -46,7 +46,7 @@ namespace GDLibrary
 
         private void InitCameras3D()
         {
-            Transform3D transform3D = new Transform3D(new Vector3(0, 25, 50),
+            Transform3D transform3D = new Transform3D(new Vector3(0, 0, 10),
                 Vector3.Zero, Vector3.Zero, 
                             new Vector3(0, 0, -1), Vector3.UnitY);
 
@@ -74,8 +74,23 @@ namespace GDLibrary
 
         private void InitPrimitives()
         {
-            this.vertexData = new VertexData<VertexPositionColorTexture>(
+            //   this.vertexData = new VertexData<VertexPositionColorTexture>(
+            //      this.vertices, PrimitiveType.TriangleStrip, 2);
+
+            Transform3D transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+
+            EffectParameters effectParameters = new EffectParameters(this.effect,
+                this.grass, Color.Red, 0.4f);
+
+            IVertexData vertexData = new VertexData<VertexPositionColorTexture>(
                 this.vertices, PrimitiveType.TriangleStrip, 2);
+
+            this.archetypalPrimitiveObject = new PrimitiveObject("original texture quad",
+                transform3D, effectParameters, vertexData);
+
+
+
         }
 
         private void InitGraphicsSettings(int width, int height)
@@ -183,64 +198,69 @@ namespace GDLibrary
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //draw vertexdata with back texture and back world matrix
-            //step 2 - set texture
-            this.effect.Texture = this.backSky;
-            //step 3 - scale and translation
-            this.vertexData.Draw(this.effect,
-                Matrix.Identity 
-                * Matrix.CreateScale(new Vector3(worldScale, worldScale, 20))
-                * Matrix.CreateTranslation(0, 0, -worldScale/2.0f),
-                this.camera3D, this._graphics.GraphicsDevice);
-
-            //draw vertexdata with left texture and left world matrix
-            this.effect.Texture = this.leftSky;
-            this.vertexData.Draw(this.effect,
-                Matrix.Identity
-                * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
-                * Matrix.CreateRotationY(MathHelper.ToRadians(90))
-                * Matrix.CreateTranslation(-worldScale / 2.0f, 0, 0),
-                 this.camera3D, this._graphics.GraphicsDevice);
+            this.archetypalPrimitiveObject.Draw(gameTime, this.camera3D,
+                                                this._graphics.GraphicsDevice);
 
 
-            //draw vertexdata with right texture and right world matrix
-            this.effect.Texture = this.rightSky;
-            this.vertexData.Draw(this.effect,
-                Matrix.Identity
-                * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
-                * Matrix.CreateRotationY(MathHelper.ToRadians(-90))
-                * Matrix.CreateTranslation(worldScale / 2.0f, 0, 0),
-                 this.camera3D, this._graphics.GraphicsDevice);
 
-            //draw vertexdata with top texture and top world matrix
-            this.effect.Texture = this.topSky;
-            this.vertexData.Draw(this.effect,
-                Matrix.Identity
-                * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
-                * Matrix.CreateRotationX(MathHelper.ToRadians(90))
-                * Matrix.CreateRotationY(MathHelper.ToRadians(-90))
-                * Matrix.CreateTranslation(0, worldScale / 2.0f, 0),
-                 this.camera3D, this._graphics.GraphicsDevice);
+            ////draw vertexdata with back texture and back world matrix
+            ////step 2 - set texture
+            //this.effect.Texture = this.backSky;
+            ////step 3 - scale and translation
+            //this.vertexData.Draw(this.effect,
+            //    Matrix.Identity 
+            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 20))
+            //    * Matrix.CreateTranslation(0, 0, -worldScale/2.0f),
+            //    this.camera3D, this._graphics.GraphicsDevice);
 
-            //draw vertexdata with front texture and front world matrix
-            //step 2 - set texture
-            this.effect.Texture = this.frontSky;
-            //step 3 - scale and translation
-            this.vertexData.Draw(this.effect,
-                Matrix.Identity
-                * Matrix.CreateScale(new Vector3(worldScale, worldScale, 20))
-                * Matrix.CreateRotationY(MathHelper.ToRadians(180))
-                * Matrix.CreateTranslation(0, 0, worldScale / 2.0f),
-                 this.camera3D, this._graphics.GraphicsDevice);
+            ////draw vertexdata with left texture and left world matrix
+            //this.effect.Texture = this.leftSky;
+            //this.vertexData.Draw(this.effect,
+            //    Matrix.Identity
+            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
+            //    * Matrix.CreateRotationY(MathHelper.ToRadians(90))
+            //    * Matrix.CreateTranslation(-worldScale / 2.0f, 0, 0),
+            //     this.camera3D, this._graphics.GraphicsDevice);
 
-            //draw vertexdata with grass texture and grass world matrix
-            this.effect.Texture = this.grass;
-            this.vertexData.Draw(this.effect,
-                Matrix.Identity
-                * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
-                * Matrix.CreateRotationX(MathHelper.ToRadians(90))
-                * Matrix.CreateTranslation(0, 0, 0),
-                 this.camera3D, this._graphics.GraphicsDevice);
+
+            ////draw vertexdata with right texture and right world matrix
+            //this.effect.Texture = this.rightSky;
+            //this.vertexData.Draw(this.effect,
+            //    Matrix.Identity
+            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
+            //    * Matrix.CreateRotationY(MathHelper.ToRadians(-90))
+            //    * Matrix.CreateTranslation(worldScale / 2.0f, 0, 0),
+            //     this.camera3D, this._graphics.GraphicsDevice);
+
+            ////draw vertexdata with top texture and top world matrix
+            //this.effect.Texture = this.topSky;
+            //this.vertexData.Draw(this.effect,
+            //    Matrix.Identity
+            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
+            //    * Matrix.CreateRotationX(MathHelper.ToRadians(90))
+            //    * Matrix.CreateRotationY(MathHelper.ToRadians(-90))
+            //    * Matrix.CreateTranslation(0, worldScale / 2.0f, 0),
+            //     this.camera3D, this._graphics.GraphicsDevice);
+
+            ////draw vertexdata with front texture and front world matrix
+            ////step 2 - set texture
+            //this.effect.Texture = this.frontSky;
+            ////step 3 - scale and translation
+            //this.vertexData.Draw(this.effect,
+            //    Matrix.Identity
+            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 20))
+            //    * Matrix.CreateRotationY(MathHelper.ToRadians(180))
+            //    * Matrix.CreateTranslation(0, 0, worldScale / 2.0f),
+            //     this.camera3D, this._graphics.GraphicsDevice);
+
+            ////draw vertexdata with grass texture and grass world matrix
+            //this.effect.Texture = this.grass;
+            //this.vertexData.Draw(this.effect,
+            //    Matrix.Identity
+            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
+            //    * Matrix.CreateRotationX(MathHelper.ToRadians(90))
+            //    * Matrix.CreateTranslation(0, 0, 0),
+            //     this.camera3D, this._graphics.GraphicsDevice);
 
             base.Draw(gameTime);
         }

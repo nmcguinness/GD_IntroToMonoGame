@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GDLibrary
 {
@@ -9,6 +10,21 @@ namespace GDLibrary
     {
         private Vector3 translation, rotationInDegrees, scale;
         private Vector3 look, up; //right = look x up
+
+        public Matrix World
+        {
+            get
+            {
+                return Matrix.Identity
+                    * Matrix.CreateScale(this.scale)
+                    * Matrix.CreateRotationX(MathHelper.ToRadians(this.rotationInDegrees.X))
+                      * Matrix.CreateRotationY(MathHelper.ToRadians(this.rotationInDegrees.Y))
+                        * Matrix.CreateRotationZ(MathHelper.ToRadians(this.rotationInDegrees.Z))
+                        * Matrix.CreateTranslation(this.translation);
+            }
+        }
+
+
 
         public Vector3 Look
         {
@@ -56,8 +72,29 @@ namespace GDLibrary
                 this.translation = value;
             } 
         }
-        public Vector3 RotationInDegrees { get; set; }
-        public Vector3 Scale { get; set; }
+        public Vector3 RotationInDegrees
+        {
+            get
+            {
+                return this.rotationInDegrees;
+            }
+            set
+            {
+                this.rotationInDegrees = value;
+            }
+        }
+
+        public Vector3 Scale
+        {
+            get
+            {
+                return this.scale;
+            }
+            set
+            {
+                this.scale = value;
+            }
+        }
 
         //to do...add a constructor suitable for Camera3D (i.e. no rotation or scale)
         public Transform3D(Vector3 translation, Vector3 rotationInDegrees, 
