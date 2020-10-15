@@ -13,16 +13,17 @@
 - [x] Add generic class for VertexData
 - [x] Added folder system and organised existing files
 - [x] Add EffectParameters
-- [ ] Add PrimitiveObject
+- [x] Add PrimitiveObject
 - [ ] Explain effect of SamplerState on on-screen aliasing
 - [ ] Explain and use VertexFactory
 - [x] Add SkyBox
-- [ ] Add Transform3D
-- [ ] Add IActor
-- [ ] Add Actor3D
-- [ ] Add Camera3D 
-- [ ] Add PrimitiveObject
+- [x] Add Transform3D
+- [x] Add IActor
+- [x] Add Actor3D
+- [x] Add Camera3D 
+- [x] Add PrimitiveObject
 - [ ] Add ObjectManager
+- [ ] Explain new input Manager classes
 - [ ] Add ContentDictionary
 - [ ] Organise new classes into folder structure
 - [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag
