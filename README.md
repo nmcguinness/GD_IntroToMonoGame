@@ -2,6 +2,15 @@
 
 ## 3D Game Engine Development - Intro to MonoGame
 
+### Code to Explain
+- [ ] Explain effect of SamplerState on on-screen aliasing
+- [ ] Explain and use VertexFactory
+- [ ] Explain new input Manager classes
+
+### Refactor for Efficiency
+- [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag
+- [ ] Improve efficiency of Transform3D::World property by adding isDirty flag
+
 ### Week 2 
 - [x] Introduces view, projection, effect, and VertexPositionColor concepts to render a wireframe triangle to the screen.
 - [x] Added a VertexData class to draw VertexPositionColor vertex types.
@@ -14,8 +23,6 @@
 - [x] Added folder system and organised existing files
 - [x] Add EffectParameters
 - [x] Add PrimitiveObject
-- [ ] Explain effect of SamplerState on on-screen aliasing
-- [ ] Explain and use VertexFactory
 - [x] Add SkyBox
 - [x] Add Transform3D
 - [x] Add IActor
@@ -23,9 +30,9 @@
 - [x] Add Camera3D 
 - [x] Add PrimitiveObject
 - [ ] Add ObjectManager
-- [ ] Explain new input Manager classes
 - [ ] Add ContentDictionary
-- [ ] Organise new classes into folder structure
-- [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag
+- [x] Organise new classes into folder structure
+- [ ] Add Actor::Description and Actor::ActorType 
+
 
 
