@@ -1,4 +1,7 @@
-﻿namespace GDLibrary
+﻿using System;
+using System.Collections.Generic;
+
+namespace GDLibrary
 {
     public class Actor3D : Actor
     {
@@ -20,5 +23,19 @@
         {
             this.transform3D = transform3D;
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Actor3D d &&
+                   EqualityComparer<Transform3D>.Default.Equals(transform3D, d.transform3D) &&
+                   EqualityComparer<Transform3D>.Default.Equals(Transform3D, d.Transform3D);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(transform3D, Transform3D);
+        }
+
+        //to do...Clone
     }
 }

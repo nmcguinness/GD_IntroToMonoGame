@@ -14,6 +14,7 @@
 - [x] Added folder system and organised existing files
 - [x] Add EffectParameters
 - [ ] Add PrimitiveObject
+- [ ] Explain effect of SamplerState on on-screen aliasing
 - [ ] Explain and use VertexFactory
 - [x] Add SkyBox
 - [ ] Add Transform3D

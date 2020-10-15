@@ -6,9 +6,8 @@ using System.Text;
 
 namespace GDLibrary
 {
-    public class ObjectManager<Actor> where T : struct, IVertexType
+    public class ObjectManager<T> where T : struct, IVertexType
     {
-        
         private List<Actor> drawnList;
         /*
         public ObjectManager(int initialDrawCount)

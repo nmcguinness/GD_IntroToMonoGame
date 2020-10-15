@@ -3,12 +3,14 @@
     public class Actor
     {
         private string id;
-       // private string description;
-        //private int type; //enum {camera, prop, arch, player, npc}
-
+        private string description;
+       // private ActorType actorType;
+  
         public Actor(string id)
         {
             this.id = id;
         }
+
+
     }
 }

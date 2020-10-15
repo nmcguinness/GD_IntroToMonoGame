@@ -75,10 +75,9 @@ namespace GDLibrary
             this.translation += delta;
         }
 
-        public void RotateAroundUpBy(float rotationInDegrees)
+        public void RotateAroundUpBy(float magnitude)
         {
-            //update the look
-            //update the up?
+            //to do...
         }
 
         //to do...Clone etc
