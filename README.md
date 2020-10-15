@@ -10,12 +10,13 @@
 ### Refactor for Efficiency
 - [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag
 - [ ] Improve efficiency of Transform3D::World property by adding isDirty flag
+- [ ] Add validation to appropriate set properties
 
-### Week 2 
+### Tasks - Week 2 
 - [x] Introduces view, projection, effect, and VertexPositionColor concepts to render a wireframe triangle to the screen.
 - [x] Added a VertexData class to draw VertexPositionColor vertex types.
 
-### Week 3
+### Tasks - Week 3
 - [x] Added ProjectionParamters to encapsulate projection matrix.
 - [x] Added assets to the Content.mgcb file. See [MonoGame Tutorial: Textures and SpriteBatch](https://gamefromscratch.com/monogame-tutorial-textures-and-spritebatch/)
 - [x] Rename default namespace to GDLibrary
@@ -33,6 +34,7 @@
 - [ ] Add ContentDictionary
 - [x] Organise new classes into folder structure
 - [ ] Add Actor::Description and Actor::ActorType 
+- [ ] Add Clone, GetHashCode, Equals to classes Actor -> PrimitiveObject
 
 
 
