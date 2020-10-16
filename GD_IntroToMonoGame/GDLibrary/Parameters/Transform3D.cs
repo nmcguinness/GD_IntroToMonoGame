@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace GDLibrary
 {
     /// <summary>
     /// Holds data related to actor (e.g. player, pickup, decorator, architecture, camera) position
     /// </summary>
-    public class Transform3D
+    public class Transform3D : ICloneable
     {
         private Vector3 translation, rotationInDegrees, scale;
         private Vector3 look, up; //right = look x up
@@ -96,7 +97,13 @@ namespace GDLibrary
             }
         }
 
-        //to do...add a constructor suitable for Camera3D (i.e. no rotation or scale)
+        //constructor suitable for Camera3D (i.e. no rotation or scale)
+        public Transform3D(Vector3 translation, Vector3 look, Vector3 up) : this(translation, Vector3.Zero, Vector3.One,
+               look, up)
+        {
+
+        }
+        //constructor suitable for drawn actors
         public Transform3D(Vector3 translation, Vector3 rotationInDegrees, 
             Vector3 scale, Vector3 look, Vector3 up)
         {
@@ -117,7 +124,11 @@ namespace GDLibrary
             //to do...
         }
 
-        //to do...Clone etc
-
+        public object Clone()
+        {
+            return new Transform3D(this.translation, this.rotationInDegrees, this.scale,
+                this.look, this.up);
+        }
+        
     }
 }

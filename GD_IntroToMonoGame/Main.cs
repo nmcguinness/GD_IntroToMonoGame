@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace GDLibrary
 {
@@ -12,14 +11,12 @@ namespace GDLibrary
         private BasicEffect effect;
         private VertexPositionColorTexture[] vertices;
         private Texture2D backSky, leftSky, rightSky, frontSky, topSky, grass;
-        private VertexData<VertexPositionColorTexture> vertexData;
         private Camera3D camera3D;
-        private PrimitiveObject archetypalPrimitiveObject;
+        private PrimitiveObject archetypalTexturedQuad;
 
-        private float moveSpeed = 0.5f;
-        private float strafeSpeed = 1;
+        private float moveSpeed = 10;
+        private float strafeSpeed = 5;
         private float worldScale = 5000;
-
 
         public Main()
         {
@@ -28,6 +25,7 @@ namespace GDLibrary
             IsMouseVisible = true;
         }
 
+        #region Initialization
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -47,11 +45,21 @@ namespace GDLibrary
         private void InitCameras3D()
         {
             Transform3D transform3D = new Transform3D(new Vector3(0, 0, 10),
-                Vector3.Zero, Vector3.Zero, 
-                            new Vector3(0, 0, -1), Vector3.UnitY);
+                /*Vector3.Zero, Vector3.Zero,*/ new Vector3(0, 0, -1), Vector3.UnitY);
 
             this.camera3D = new Camera3D("simple 1st person", transform3D,
                 ProjectionParameters.StandardDeepSixteenTen);
+        }
+
+        private void InitPrimitives()
+        {
+            InitWireframeHelpers();
+            InitTexturedQuad();
+        }
+
+        private void InitWireframeHelpers()
+        {
+            //to do...add wireframe origin
         }
 
         private void InitTextures()
@@ -72,25 +80,46 @@ namespace GDLibrary
               = Content.Load<Texture2D>("Assets/Textures/Foliage/Ground/grass1");
         }
 
-        private void InitPrimitives()
+        private void InitVertices()
         {
-            //   this.vertexData = new VertexData<VertexPositionColorTexture>(
-            //      this.vertices, PrimitiveType.TriangleStrip, 2);
+            this.vertices
+                = new VertexPositionColorTexture[4];
 
+            float halfLength = 0.5f;
+            //TL
+            vertices[0] = new VertexPositionColorTexture(
+                new Vector3(-halfLength, halfLength, 0),
+                new Color(255, 255, 255, 255), new Vector2(0, 0));
+
+            //BL
+            vertices[1] = new VertexPositionColorTexture(
+                new Vector3(-halfLength, -halfLength, 0),
+                Color.White, new Vector2(0, 1));
+
+            //TR
+            vertices[2] = new VertexPositionColorTexture(
+                new Vector3(halfLength, halfLength, 0),
+                Color.White, new Vector2(1, 0));
+
+            //BR
+            vertices[3] = new VertexPositionColorTexture(
+                new Vector3(halfLength, -halfLength, 0),
+                Color.White, new Vector2(1, 1));
+        }
+
+        private void InitTexturedQuad()
+        {
             Transform3D transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+               Vector3.One, Vector3.UnitZ, Vector3.UnitY);
 
             EffectParameters effectParameters = new EffectParameters(this.effect,
-                this.grass, Color.Red, 0.4f);
+                this.grass, /*bug*/ Color.White, 1);
 
             IVertexData vertexData = new VertexData<VertexPositionColorTexture>(
                 this.vertices, PrimitiveType.TriangleStrip, 2);
 
-            this.archetypalPrimitiveObject = new PrimitiveObject("original texture quad",
+            this.archetypalTexturedQuad = new PrimitiveObject("original texture quad",
                 transform3D, effectParameters, vertexData);
-
-
-
         }
 
         private void InitGraphicsSettings(int width, int height)
@@ -114,46 +143,21 @@ namespace GDLibrary
             this._graphics.GraphicsDevice.SamplerStates[0] = samplerState;
         }
 
-        //play around with changing the values inside this method
-        private void InitVertices()
-        {
-            this.vertices
-                = new VertexPositionColorTexture[4];
-
-            float halfLength = 0.5f;
-            //TL
-            vertices[0] = new VertexPositionColorTexture(
-                new Vector3(-halfLength, halfLength, 0),
-                new Color(255,255,255,255), new Vector2(0, 0));
-
-            //BL
-            vertices[1] = new VertexPositionColorTexture(
-                new Vector3(-halfLength, -halfLength, 0),
-                Color.White, new Vector2(0, 1));
-
-            //TR
-            vertices[2] = new VertexPositionColorTexture(
-                new Vector3(halfLength, halfLength, 0),
-                Color.White, new Vector2(1, 0));
-
-            //BR
-            vertices[3] = new VertexPositionColorTexture(
-                new Vector3(halfLength, -halfLength, 0),
-                Color.White, new Vector2(1, 1));
-        }
-
         private void InitEffect()
         {
             this.effect = new BasicEffect(this._graphics.GraphicsDevice);
             this.effect.VertexColorEnabled = true; //otherwise we wont see RGB
             this.effect.TextureEnabled = true;
-        }
+        } 
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
+        #endregion
+
+        #region Update & Draw
         protected override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -193,16 +197,11 @@ namespace GDLibrary
             base.Update(gameTime);
         }
 
-
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            this.archetypalPrimitiveObject.Draw(gameTime, this.camera3D,
-                                                this._graphics.GraphicsDevice);
-
-
-
+    
             ////draw vertexdata with back texture and back world matrix
             ////step 2 - set texture
             //this.effect.Texture = this.backSky;
@@ -264,5 +263,7 @@ namespace GDLibrary
 
             base.Draw(gameTime);
         }
+
+        #endregion
     }
 }

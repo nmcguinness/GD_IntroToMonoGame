@@ -1,3 +1,5 @@
+
+
 **For a markdown cheat sheet see [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)**
 
 ## 3D Game Engine Development - Intro to MonoGame
@@ -5,7 +7,7 @@
 ### Code to Explain
 - [ ] Explain effect of SamplerState on on-screen aliasing
 - [ ] Explain and use VertexFactory
-- [ ] Explain new input Manager classes
+- [ ] Explain new input manager classes (MouseManager, KeyboardManager, GamePadManager)
 
 ### Refactor for Efficiency
 - [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag

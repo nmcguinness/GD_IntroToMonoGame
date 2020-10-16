@@ -37,5 +37,9 @@ namespace GDLibrary
         }
 
         //to do...Clone
+        public new object Clone()
+        {
+            return new Actor3D(this.ID, this.transform3D.Clone() as Transform3D);
+        }
     }
 }

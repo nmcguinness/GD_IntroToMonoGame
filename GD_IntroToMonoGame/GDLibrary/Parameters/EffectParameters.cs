@@ -127,7 +127,17 @@ namespace GDLibrary
             this.Alpha = alpha;
         }
 
-        //to do...
+        public void Draw(Matrix world, Camera3D camera)
+        {
+            this.effect.World = world;
+            this.effect.View = camera.View;
+            this.effect.Projection = camera.Projection;
+            this.effect.Texture = this.texture;
+            //to do - diffuse and alpha are not applied
+            this.effect.DiffuseColor = this.diffuseColor.ToVector3();
+            this.effect.Alpha = this.alpha;
+            this.effect.CurrentTechnique.Passes[0].Apply();
+        }
 
         public object Clone()
         {
