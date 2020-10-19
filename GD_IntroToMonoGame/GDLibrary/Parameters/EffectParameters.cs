@@ -144,8 +144,8 @@ namespace GDLibrary
             //hybrid - shallow and deep
             return new EffectParameters(this.effect, //ref - shallow
                 this.texture,  //ref - shallow
-                this.diffuseColor, //in-built type - so deep
-                this.alpha); //primitive type - so deep
+                this.diffuseColor, //in-built value types - so deep
+                this.alpha); //in-built primitive value types - so deep
         }
 
         public override bool Equals(object obj)

@@ -1,12 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
 
 namespace GDLibrary
 {
     public class Camera3D : Actor3D
     {
+        #region Fields
         //name, active, Transform3D::Reset??
         private ProjectionParameters projectionParameters;
+        #endregion
 
+        #region Properties
         public Matrix Projection
         {
             get
@@ -24,12 +29,33 @@ namespace GDLibrary
                     this.Transform3D.Up);
             }
         }
+        #endregion
 
-        public Camera3D(string id, Transform3D transform3D, 
+        #region Constructors
+        public Camera3D(string id, ActorType actorType, StatusType statusType, Transform3D transform3D, 
                     ProjectionParameters projectionParameters)
-            : base(id, transform3D)
+            : base(id, actorType, statusType, transform3D)
         {
             this.projectionParameters = projectionParameters;
+        }
+        #endregion
+
+        public override bool Equals(object obj)
+        {
+            return obj is Camera3D d &&
+                   base.Equals(obj) &&
+                   EqualityComparer<ProjectionParameters>.Default.Equals(projectionParameters, d.projectionParameters);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(base.GetHashCode(), projectionParameters);
+        }
+
+        public new object Clone()
+        {
+            return new Camera3D(this.ID, this.ActorType, this.StatusType, this.Transform3D.Clone() as Transform3D, 
+                this.projectionParameters.Clone() as ProjectionParameters);
         }
     }
 }

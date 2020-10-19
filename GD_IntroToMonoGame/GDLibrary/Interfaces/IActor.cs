@@ -1,16 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace GD_IntroToMonoGame.GDLibrary.Interfaces
+namespace GDLibrary
 {
     public interface IActor : ICloneable
     {
-        //add methods over time...
         void Update(GameTime gameTime);
+        void Draw(GameTime gameTime, Camera3D camera, GraphicsDevice graphicsDevice);
 
-        //camera, trigger volume
-        //void Draw(GameTime gameTime);
-
-        float GetAlpha();
     }
 }

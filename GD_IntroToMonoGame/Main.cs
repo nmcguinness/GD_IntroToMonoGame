@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace GDLibrary
 {
@@ -16,7 +17,7 @@ namespace GDLibrary
 
         private float moveSpeed = 10;
         private float strafeSpeed = 5;
-        private float worldScale = 5000;
+        private float worldScale = 2000;
 
         public Main()
         {
@@ -28,10 +29,16 @@ namespace GDLibrary
         #region Initialization
         protected override void Initialize()
         {
+            //IVertexData v = new VertexData<VertexPositionColor>(verts, PrimitiveType.LineList, 1);
+            //IVertexData clone = v.Clone() as IVertexData;
+            //clone.SetPrimitiveType(PrimitiveType.TriangleList);
+
+
             // TODO: Add your initialization logic here
             Window.Title = "My Amazing Game";
 
             InitCameras3D();
+            InitManagers();
             InitVertices();
             InitTextures();
             InitEffect();
@@ -42,12 +49,22 @@ namespace GDLibrary
             base.Initialize();
         }
 
+        private void InitManagers()
+        {
+            this.objectManager = new ObjectManager(this, 6, 10, this.camera3D);
+            Components.Add(this.objectManager);
+
+            //keyboard
+
+            //mouse
+        }
+
         private void InitCameras3D()
         {
-            Transform3D transform3D = new Transform3D(new Vector3(0, 0, 10),
+            Transform3D transform3D = new Transform3D(new Vector3(0, 50, 10),
                 /*Vector3.Zero, Vector3.Zero,*/ new Vector3(0, 0, -1), Vector3.UnitY);
 
-            this.camera3D = new Camera3D("simple 1st person", transform3D,
+            this.camera3D = new Camera3D("simple 1st person", ActorType.Camera3D, StatusType.Update, transform3D,
                 ProjectionParameters.StandardDeepSixteenTen);
         }
 
@@ -119,7 +136,56 @@ namespace GDLibrary
                 this.vertices, PrimitiveType.TriangleStrip, 2);
 
             this.archetypalTexturedQuad = new PrimitiveObject("original texture quad",
+                ActorType.Decorator, 
+                StatusType.Update | StatusType.Drawn,
                 transform3D, effectParameters, vertexData);
+
+            //6 clones
+            primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+            primitiveObject.ID = "sky back";
+            primitiveObject.EffectParameters.Texture = this.backSky;
+            primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
+            primitiveObject.Transform3D.Translation = new Vector3(0, 0, -worldScale / 2.0f);
+            this.objectManager.Add(primitiveObject);
+
+            //left
+            primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+            primitiveObject.ID = "left back";
+            primitiveObject.EffectParameters.Texture = this.leftSky;
+            primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
+            primitiveObject.Transform3D.RotationInDegrees = new Vector3(0, 90, 0);
+            primitiveObject.Transform3D.Translation = new Vector3(-worldScale / 2.0f, 0, 0);
+            this.objectManager.Add(primitiveObject);
+
+            //right
+            primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+            primitiveObject.ID = "sky right";
+            primitiveObject.EffectParameters.Texture = this.rightSky;
+            primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 20);
+            primitiveObject.Transform3D.RotationInDegrees = new Vector3(0, -90, 0);
+            primitiveObject.Transform3D.Translation = new Vector3(worldScale / 2.0f, 0, 0);
+            this.objectManager.Add(primitiveObject);
+
+             
+            //top
+            primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+            primitiveObject.ID = "sky top";
+            primitiveObject.EffectParameters.Texture = this.topSky;
+            primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
+            primitiveObject.Transform3D.RotationInDegrees = new Vector3(90, -90, 0);
+            primitiveObject.Transform3D.Translation = new Vector3(0 ,worldScale / 2.0f, 0);
+            this.objectManager.Add(primitiveObject);
+
+            //to do...front
+
+
+            //grass
+            primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+            primitiveObject.ID = "grass";
+            primitiveObject.EffectParameters.Texture = this.grass;
+            primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
+            primitiveObject.Transform3D.RotationInDegrees = new Vector3(90, 90, 0);
+            this.objectManager.Add(primitiveObject);
         }
 
         private void InitGraphicsSettings(int width, int height)
@@ -197,11 +263,34 @@ namespace GDLibrary
             base.Update(gameTime);
         }
 
+        PrimitiveObject primitiveObject = null;
+        private ObjectManager objectManager;
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-    
+            //     this.archetypalTexturedQuad.Transform3D.Scale = new Vector3(10, 4, 1);
+            //     this.archetypalTexturedQuad.Draw(gameTime, this.camera3D, this._graphics.GraphicsDevice);
+
+            ////back
+            //primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+            //primitiveObject.EffectParameters.Texture = this.backSky;
+            //primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
+            //primitiveObject.Transform3D.Translation = new Vector3(0, 0, -worldScale / 2.0f);
+            //primitiveObject.Draw(gameTime, this.camera3D, this._graphics.GraphicsDevice);
+
+            ////left
+            //primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+            //primitiveObject.EffectParameters.Texture = this.leftSky;
+            //primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
+            //primitiveObject.Transform3D.RotationInDegrees = new Vector3(0, 90, 0);
+            //primitiveObject.Transform3D.Translation = new Vector3(-worldScale / 2.0f, 0, 0);
+            //primitiveObject.Draw(gameTime, this.camera3D, this._graphics.GraphicsDevice);
+
+
+
+
             ////draw vertexdata with back texture and back world matrix
             ////step 2 - set texture
             //this.effect.Texture = this.backSky;

@@ -10,5 +10,19 @@ namespace GDLibrary
     public interface IVertexData : ICloneable
     {
         void Draw(GameTime gameTime, BasicEffect effect, GraphicsDevice graphicsDevice);
+
+        //getters
+        PrimitiveType GetPrimitiveType();
+        int GetPrimitiveCount();
+
+        //setters
+
+        //public int PrimitiveCount
+        //{
+        //    get
+        //    {
+        //        return this.primitiveCount;
+        //    }
+        //}
     }
 }

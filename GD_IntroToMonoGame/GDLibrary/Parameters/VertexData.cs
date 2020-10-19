@@ -29,6 +29,7 @@ namespace GDLibrary
 
         public object Clone()
         {
+            //shallow (no use of the "new" keyword)
             return this;
         }
 
@@ -38,20 +39,30 @@ namespace GDLibrary
             graphicsDevice.DrawUserPrimitives<T>(this.primitiveType,
                 this.vertices, 0, this.primitiveCount);
         }
-        /*
-        public void Draw(BasicEffect effect, 
-            Matrix world, Camera3D camera3D,
-            GraphicsDevice graphicsDevice)
+
+        public int GetPrimitiveCount()
         {
-            effect.World = world;
-            effect.View = camera3D.View;
-            effect.Projection = camera3D.Projection;
-            effect.CurrentTechnique.Passes[0].Apply();
-            graphicsDevice.DrawUserPrimitives<T>(
-                this.primitiveType,
-                this.vertices, 0, this.primitiveCount);
+            return this.primitiveCount;
         }
-        */
+
+        public PrimitiveType GetPrimitiveType()
+        {
+            return this.primitiveType;
+        }
+        /*
+public void Draw(BasicEffect effect, 
+   Matrix world, Camera3D camera3D,
+   GraphicsDevice graphicsDevice)
+{
+   effect.World = world;
+   effect.View = camera3D.View;
+   effect.Projection = camera3D.Projection;
+   effect.CurrentTechnique.Passes[0].Apply();
+   graphicsDevice.DrawUserPrimitives<T>(
+       this.primitiveType,
+       this.vertices, 0, this.primitiveCount);
+}
+*/
 
     }
 }

@@ -8,6 +8,8 @@
 - [ ] Explain effect of SamplerState on on-screen aliasing
 - [ ] Explain and use VertexFactory
 - [ ] Explain new input manager classes (MouseManager, KeyboardManager, GamePadManager)
+- [ ] Explain and use IBehavior and the classes which implement it.
+- [ ] Create a simple enum using 2^N values on the enum values and demonstrate bitwise operators.
 
 ### Refactor for Efficiency
 - [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag
@@ -32,11 +34,15 @@
 - [x] Add Actor3D
 - [x] Add Camera3D 
 - [x] Add PrimitiveObject
-- [ ] Add ObjectManager
-- [ ] Add ContentDictionary
 - [x] Organise new classes into folder structure
-- [ ] Add Actor::Description and Actor::ActorType 
-- [ ] Add Clone, GetHashCode, Equals to classes Actor -> PrimitiveObject
 
-
-
+### Tasks - Week 4
+- [x] Added new enums: ActorType and StatusType
+- [x] Add Actor::Description, Actor::ActorType, and Actor::StatusType
+- [x] Add Clone, GetHashCode, Equals to classes in IActor hierarchy
+- [x] Add ObjectManager and created lists using DrawnActor3D
+- [x] Removed unnecessary GetAlpha() etc from IActor after change to ObjectManager list from IActor to DrawnActor3D
+- [ ] Add CameraManager
+- [ ] Re-factor IActor::Draw and ObjectManager to use Camera3D
+- [ ] Use StatusType in ObjectManager Update and Draw
+- [ ] Add ContentDictionary
