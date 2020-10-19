@@ -1,8 +1,6 @@
-** For a link to the repo see [GitHub](https://github.com/nmcguinness/GD_IntroToMonoGame.git)
-
 **For a markdown cheat sheet see [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)**
 
-## 3D Game Engine Development - Intro to MonoGame
+## 3D Game Engine Development - [Intro to MonoGame](https://github.com/nmcguinness/GD_IntroToMonoGame.git)
 
 ### Code to Explain
 - [ ] Explain effect of SamplerState on on-screen aliasing
