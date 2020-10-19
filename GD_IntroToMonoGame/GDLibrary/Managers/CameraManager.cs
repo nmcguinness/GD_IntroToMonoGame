@@ -1,10 +1,10 @@
-﻿using GDLibrary;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
 namespace GDLibrary
 {
-    public class CameraManager
+    public class CameraManager : GameComponent
     {
         private List<Camera3D> list;
         private int activeCameraIndex = 0;
@@ -42,12 +42,14 @@ namespace GDLibrary
             }
             set
             {
+                //in a 3 camera world [0,1,2,3,4,5,...] become [0,1,2,0,1,2,...]
+                value = value % this.list.Count;
                 this.activeCameraIndex = value; //bug!!! [0, list.size()-1]
             }
         }
 
 
-        public CameraManager()
+        public CameraManager(Game game) : base(game)
         {
            this.list = new List<Camera3D>();
         }
@@ -68,6 +70,17 @@ namespace GDLibrary
             }
 
             return false;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach(Camera3D camera in this.list)
+            {
+                if ((camera.StatusType & StatusType.Update) == StatusType.Update)
+                    camera.Update(gameTime);
+            }
+
+            base.Update(gameTime);
         }
     }
 }

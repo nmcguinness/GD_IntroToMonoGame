@@ -9,7 +9,7 @@
 - [ ] Explain and use VertexFactory
 - [ ] Explain new input manager classes (MouseManager, KeyboardManager, GamePadManager)
 - [ ] Explain and use IController and the classes which implement it.
-- [ ] Create a simple enum using 2^N values on the enum values and demonstrate bitwise operators.
+- [x] Create a simple enum using 2^N values on the enum values and demonstrate bitwise operators.
 
 ### Refactor for Efficiency
 - [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag
@@ -42,7 +42,7 @@
 - [x] Add Clone, GetHashCode, Equals to classes in IActor hierarchy
 - [x] Add ObjectManager and created lists using DrawnActor3D
 - [x] Removed unnecessary GetAlpha() etc from IActor after change to ObjectManager list from IActor to DrawnActor3D
-- [ ] Add CameraManager
+- [x] Add CameraManager and make a GameComponent
 - [ ] Re-factor IActor::Draw and ObjectManager to use Camera3D
 - [ ] Use StatusType in ObjectManager Update and Draw
 - [ ] Add ContentDictionary

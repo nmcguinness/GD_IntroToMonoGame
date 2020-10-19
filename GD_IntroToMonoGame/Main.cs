@@ -17,6 +17,11 @@ namespace GDLibrary
         private float moveSpeed = 10;
         private float strafeSpeed = 5;
         private float worldScale = 2000;
+        PrimitiveObject primitiveObject = null;
+        private CameraManager cameraManager;
+        private ObjectManager objectManager;
+        private KeyboardManager keyboardManager;
+
 
         public Main()
         {
@@ -36,7 +41,8 @@ namespace GDLibrary
             // TODO: Add your initialization logic here
             Window.Title = "My Amazing Game";
 
-            this.cameraManager = new CameraManager();
+            this.cameraManager = new CameraManager(this);
+            Components.Add(this.cameraManager);
 
             InitCameras3D();
             InitManagers();
@@ -59,6 +65,8 @@ namespace GDLibrary
             Components.Add(this.objectManager);
 
             //keyboard
+            this.keyboardManager = new KeyboardManager(this);
+            Components.Add(this.keyboardManager);
 
             //mouse
         }
@@ -67,22 +75,35 @@ namespace GDLibrary
         {
             #region Camera 1
             Transform3D transform3D = new Transform3D(new Vector3(0, 50, 10),
-                /*Vector3.Zero, Vector3.Zero,*/ new Vector3(0, 0, -1), Vector3.UnitY);
+                new Vector3(0, 0, -1), Vector3.UnitY);
 
-            this.cameraManager.Add(new Camera3D("simple 1st person", ActorType.Camera3D, StatusType.Update, transform3D,
+            this.cameraManager.Add(new Camera3D("simple 1st person", 
+                ActorType.Camera3D, StatusType.Update, transform3D,
                 ProjectionParameters.StandardDeepSixteenTen));
             #endregion
 
-            #region Camera 2
+            #region Camera 2 - fallen on its side to -ve X-axis
+            transform3D = new Transform3D(new Vector3(0, 50, 10),
+                        new Vector3(0, 0, -1), 
+                        -Vector3.UnitX);
 
+            this.cameraManager.Add(new Camera3D("fallen over 1st person", 
+                ActorType.Camera3D, StatusType.Update, transform3D,
+            ProjectionParameters.StandardDeepSixteenTen));
             #endregion
 
 
             #region Camera 3
+            transform3D = new Transform3D(new Vector3(0, 250, 100),
+                       new Vector3(0, -1, -1), //look
+                       new Vector3(0, 1,-1)); //up
+
+            this.cameraManager.Add(new Camera3D("giant looking down 1st person",
+              ActorType.Camera3D, StatusType.Update, transform3D,
+          ProjectionParameters.StandardDeepSixteenTen));
+
 
             #endregion
-
-
             this.cameraManager.ActiveCameraIndex = 0; //0, 1, 2
 
         }
@@ -246,138 +267,19 @@ namespace GDLibrary
         #region Update & Draw
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (this.keyboardManager.IsFirstKeyPress(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.C))
-            {
-                this.cameraManager.ActiveCameraIndex++;
-            }
-
-                /*
-                if (Keyboard.GetState().IsKeyDown(Keys.W))
-                {
-                    this.camera3D.Transform3D.TranslateBy(
-                        moveSpeed * this.camera3D.Transform3D.Look);
-                }
-                else if (Keyboard.GetState().IsKeyDown(Keys.S))
-                {
-                    this.camera3D.Transform3D.TranslateBy(
-                         -1 * moveSpeed * this.camera3D.Transform3D.Look);
-                }
-
-                if (Keyboard.GetState().IsKeyDown(Keys.A))
-                {
-                    this.camera3D.Transform3D.TranslateBy(
-                        -1 * strafeSpeed * this.camera3D.Transform3D.Right);
-                }
-                else if (Keyboard.GetState().IsKeyDown(Keys.D))
-                {
-                    this.camera3D.Transform3D.TranslateBy(
-                         strafeSpeed * this.camera3D.Transform3D.Right);
-                }
-
-                if (Keyboard.GetState().IsKeyDown(Keys.NumPad4))
-                {
-                    this.camera3D.Transform3D.RotateAroundUpBy(-1);
-                }
-                else if (Keyboard.GetState().IsKeyDown(Keys.D))
-                {
-                    this.camera3D.Transform3D.RotateAroundUpBy(1);
-                }
-                */
+            if (this.keyboardManager.IsFirstKeyPress(Keys.C))
+                this.cameraManager.ActiveCameraIndex++;                                                                 
 
                 base.Update(gameTime);
         }
 
-        PrimitiveObject primitiveObject = null;
-        private CameraManager cameraManager;
-        private ObjectManager objectManager;
-
+    
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            //     this.archetypalTexturedQuad.Transform3D.Scale = new Vector3(10, 4, 1);
-            //     this.archetypalTexturedQuad.Draw(gameTime, this.camera3D, this._graphics.GraphicsDevice);
-
-            ////back
-            //primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
-            //primitiveObject.EffectParameters.Texture = this.backSky;
-            //primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
-            //primitiveObject.Transform3D.Translation = new Vector3(0, 0, -worldScale / 2.0f);
-            //primitiveObject.Draw(gameTime, this.camera3D, this._graphics.GraphicsDevice);
-
-            ////left
-            //primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
-            //primitiveObject.EffectParameters.Texture = this.leftSky;
-            //primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
-            //primitiveObject.Transform3D.RotationInDegrees = new Vector3(0, 90, 0);
-            //primitiveObject.Transform3D.Translation = new Vector3(-worldScale / 2.0f, 0, 0);
-            //primitiveObject.Draw(gameTime, this.camera3D, this._graphics.GraphicsDevice);
-
-
-
-
-            ////draw vertexdata with back texture and back world matrix
-            ////step 2 - set texture
-            //this.effect.Texture = this.backSky;
-            ////step 3 - scale and translation
-            //this.vertexData.Draw(this.effect,
-            //    Matrix.Identity 
-            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 20))
-            //    * Matrix.CreateTranslation(0, 0, -worldScale/2.0f),
-            //    this.camera3D, this._graphics.GraphicsDevice);
-
-            ////draw vertexdata with left texture and left world matrix
-            //this.effect.Texture = this.leftSky;
-            //this.vertexData.Draw(this.effect,
-            //    Matrix.Identity
-            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
-            //    * Matrix.CreateRotationY(MathHelper.ToRadians(90))
-            //    * Matrix.CreateTranslation(-worldScale / 2.0f, 0, 0),
-            //     this.camera3D, this._graphics.GraphicsDevice);
-
-
-            ////draw vertexdata with right texture and right world matrix
-            //this.effect.Texture = this.rightSky;
-            //this.vertexData.Draw(this.effect,
-            //    Matrix.Identity
-            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
-            //    * Matrix.CreateRotationY(MathHelper.ToRadians(-90))
-            //    * Matrix.CreateTranslation(worldScale / 2.0f, 0, 0),
-            //     this.camera3D, this._graphics.GraphicsDevice);
-
-            ////draw vertexdata with top texture and top world matrix
-            //this.effect.Texture = this.topSky;
-            //this.vertexData.Draw(this.effect,
-            //    Matrix.Identity
-            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
-            //    * Matrix.CreateRotationX(MathHelper.ToRadians(90))
-            //    * Matrix.CreateRotationY(MathHelper.ToRadians(-90))
-            //    * Matrix.CreateTranslation(0, worldScale / 2.0f, 0),
-            //     this.camera3D, this._graphics.GraphicsDevice);
-
-            ////draw vertexdata with front texture and front world matrix
-            ////step 2 - set texture
-            //this.effect.Texture = this.frontSky;
-            ////step 3 - scale and translation
-            //this.vertexData.Draw(this.effect,
-            //    Matrix.Identity
-            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 20))
-            //    * Matrix.CreateRotationY(MathHelper.ToRadians(180))
-            //    * Matrix.CreateTranslation(0, 0, worldScale / 2.0f),
-            //     this.camera3D, this._graphics.GraphicsDevice);
-
-            ////draw vertexdata with grass texture and grass world matrix
-            //this.effect.Texture = this.grass;
-            //this.vertexData.Draw(this.effect,
-            //    Matrix.Identity
-            //    * Matrix.CreateScale(new Vector3(worldScale, worldScale, 1))
-            //    * Matrix.CreateRotationX(MathHelper.ToRadians(90))
-            //    * Matrix.CreateTranslation(0, 0, 0),
-            //     this.camera3D, this._graphics.GraphicsDevice);
-
             base.Draw(gameTime);
         }
 
