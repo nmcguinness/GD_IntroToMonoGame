@@ -6,14 +6,14 @@ namespace GDLibrary
 {
     public class ObjectManager : DrawableGameComponent
     {
-        private Camera3D camera3D;
+        private CameraManager cameraManager;
         private List<DrawnActor3D> opaqueList, transparentList;
 
         public ObjectManager(Game game, 
             int initialOpaqueDrawSize, int initialTransparentDrawSize,
-            Camera3D camera3D) : base(game)
+            CameraManager cameraManager) : base(game)
         {
-            this.camera3D = camera3D;
+            this.cameraManager = cameraManager;
             this.opaqueList = new List<DrawnActor3D>(initialOpaqueDrawSize);
             this.transparentList = new List<DrawnActor3D>(initialTransparentDrawSize);
         }
@@ -64,7 +64,10 @@ namespace GDLibrary
             foreach (DrawnActor3D actor in this.opaqueList)
             {
                 if ((actor.StatusType & StatusType.Drawn) == StatusType.Drawn)
-                    actor.Draw(gameTime, this.camera3D, this.GraphicsDevice);
+                    actor.Draw(gameTime, 
+                       // this.cameraManager[this.cameraManager.ActiveCameraIndex],
+                       this.cameraManager.ActiveCamera,
+                        this.GraphicsDevice);
             }
 
         //    base.Draw(gameTime);

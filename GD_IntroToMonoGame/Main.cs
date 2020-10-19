@@ -12,7 +12,6 @@ namespace GDLibrary
         private BasicEffect effect;
         private VertexPositionColorTexture[] vertices;
         private Texture2D backSky, leftSky, rightSky, frontSky, topSky, grass;
-        private Camera3D camera3D;
         private PrimitiveObject archetypalTexturedQuad;
 
         private float moveSpeed = 10;
@@ -37,6 +36,8 @@ namespace GDLibrary
             // TODO: Add your initialization logic here
             Window.Title = "My Amazing Game";
 
+            this.cameraManager = new CameraManager();
+
             InitCameras3D();
             InitManagers();
             InitVertices();
@@ -51,7 +52,10 @@ namespace GDLibrary
 
         private void InitManagers()
         {
-            this.objectManager = new ObjectManager(this, 6, 10, this.camera3D);
+           // this.cameraManager = new CameraManager();
+
+
+            this.objectManager = new ObjectManager(this, 6, 10, this.cameraManager);
             Components.Add(this.objectManager);
 
             //keyboard
@@ -61,11 +65,26 @@ namespace GDLibrary
 
         private void InitCameras3D()
         {
+            #region Camera 1
             Transform3D transform3D = new Transform3D(new Vector3(0, 50, 10),
                 /*Vector3.Zero, Vector3.Zero,*/ new Vector3(0, 0, -1), Vector3.UnitY);
 
-            this.camera3D = new Camera3D("simple 1st person", ActorType.Camera3D, StatusType.Update, transform3D,
-                ProjectionParameters.StandardDeepSixteenTen);
+            this.cameraManager.Add(new Camera3D("simple 1st person", ActorType.Camera3D, StatusType.Update, transform3D,
+                ProjectionParameters.StandardDeepSixteenTen));
+            #endregion
+
+            #region Camera 2
+
+            #endregion
+
+
+            #region Camera 3
+
+            #endregion
+
+
+            this.cameraManager.ActiveCameraIndex = 0; //0, 1, 2
+
         }
 
         private void InitPrimitives()
@@ -140,8 +159,9 @@ namespace GDLibrary
                 StatusType.Update | StatusType.Drawn,
                 transform3D, effectParameters, vertexData);
 
-            //6 clones
+            //back
             primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+          //  primitiveObject.StatusType = StatusType.Off; //Experiment of the effect of StatusType
             primitiveObject.ID = "sky back";
             primitiveObject.EffectParameters.Texture = this.backSky;
             primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
@@ -229,41 +249,49 @@ namespace GDLibrary
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            if (Keyboard.GetState().IsKeyDown(Keys.C))
             {
-                this.camera3D.Transform3D.TranslateBy(
-                    moveSpeed * this.camera3D.Transform3D.Look);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                this.camera3D.Transform3D.TranslateBy(
-                     -1 * moveSpeed * this.camera3D.Transform3D.Look);
+                this.cameraManager.ActiveCameraIndex++;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                this.camera3D.Transform3D.TranslateBy(
-                    -1 * strafeSpeed * this.camera3D.Transform3D.Right);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                this.camera3D.Transform3D.TranslateBy(
-                     strafeSpeed * this.camera3D.Transform3D.Right);
-            }
+                /*
+                if (Keyboard.GetState().IsKeyDown(Keys.W))
+                {
+                    this.camera3D.Transform3D.TranslateBy(
+                        moveSpeed * this.camera3D.Transform3D.Look);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Keys.S))
+                {
+                    this.camera3D.Transform3D.TranslateBy(
+                         -1 * moveSpeed * this.camera3D.Transform3D.Look);
+                }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.NumPad4))
-            {
-                this.camera3D.Transform3D.RotateAroundUpBy(-1);
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                this.camera3D.Transform3D.RotateAroundUpBy(1);
-            }
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                {
+                    this.camera3D.Transform3D.TranslateBy(
+                        -1 * strafeSpeed * this.camera3D.Transform3D.Right);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Keys.D))
+                {
+                    this.camera3D.Transform3D.TranslateBy(
+                         strafeSpeed * this.camera3D.Transform3D.Right);
+                }
 
-            base.Update(gameTime);
+                if (Keyboard.GetState().IsKeyDown(Keys.NumPad4))
+                {
+                    this.camera3D.Transform3D.RotateAroundUpBy(-1);
+                }
+                else if (Keyboard.GetState().IsKeyDown(Keys.D))
+                {
+                    this.camera3D.Transform3D.RotateAroundUpBy(1);
+                }
+                */
+
+                base.Update(gameTime);
         }
 
         PrimitiveObject primitiveObject = null;
+        private CameraManager cameraManager;
         private ObjectManager objectManager;
 
         protected override void Draw(GameTime gameTime)
