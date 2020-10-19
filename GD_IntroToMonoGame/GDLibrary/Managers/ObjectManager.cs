@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
 
@@ -27,8 +26,11 @@ namespace GDLibrary
                 this.opaqueList.Add(actor);
         }
 
-        public bool RemoveIf(Predicate<IActor> predicate)
+        public bool RemoveIf(Predicate<DrawnActor3D> predicate)
         {
+
+         //   RemoveIf(actor => actor.ID.Equals("dungeon powerup key"));
+
             int position = this.opaqueList.FindIndex(predicate);
 
             if (position != -1)
@@ -40,26 +42,32 @@ namespace GDLibrary
             return false;
         }
 
-        public int RemoveAllIf(Predicate<IActor> predicate)
+        public int RemoveAllIf(Predicate<DrawnActor3D> predicate)
         {
+            //to do...
             return -1;
         }
 
         public override void Update(GameTime gameTime)
         {
-            foreach (IActor actor in this.opaqueList)
-                actor.Update(gameTime);
-
-            base.Update(gameTime);
+            foreach (DrawnActor3D actor in this.opaqueList)
+            {
+                if((actor.StatusType & StatusType.Update) == StatusType.Update)
+                    actor.Update(gameTime);
+            }
+               
+        //    base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            foreach(IActor actor in this.opaqueList)
-                actor.Draw(gameTime, this.camera3D, this.GraphicsDevice);
+            foreach (DrawnActor3D actor in this.opaqueList)
+            {
+                if ((actor.StatusType & StatusType.Drawn) == StatusType.Drawn)
+                    actor.Draw(gameTime, this.camera3D, this.GraphicsDevice);
+            }
 
-
-            base.Draw(gameTime);
+        //    base.Draw(gameTime);
         }
 
 

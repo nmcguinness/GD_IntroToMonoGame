@@ -9,5 +9,7 @@ namespace GDLibrary
         void Update(GameTime gameTime);
         void Draw(GameTime gameTime, Camera3D camera, GraphicsDevice graphicsDevice);
 
+     //   string GetID();
+     //   float GetAlpha();
     }
 }

@@ -8,7 +8,7 @@
 - [ ] Explain effect of SamplerState on on-screen aliasing
 - [ ] Explain and use VertexFactory
 - [ ] Explain new input manager classes (MouseManager, KeyboardManager, GamePadManager)
-- [ ] Explain and use IBehavior and the classes which implement it.
+- [ ] Explain and use IController and the classes which implement it.
 - [ ] Create a simple enum using 2^N values on the enum values and demonstrate bitwise operators.
 
 ### Refactor for Efficiency
@@ -46,3 +46,4 @@
 - [ ] Re-factor IActor::Draw and ObjectManager to use Camera3D
 - [ ] Use StatusType in ObjectManager Update and Draw
 - [ ] Add ContentDictionary
+- [ ] Add tiling functionality (see grass plane)

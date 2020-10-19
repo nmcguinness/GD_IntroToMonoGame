@@ -40,6 +40,12 @@ namespace GDLibrary
         }
         #endregion
 
+        public new object Clone()
+        {
+            return new Camera3D(this.ID, this.ActorType, this.StatusType, this.Transform3D.Clone() as Transform3D, 
+                this.projectionParameters.Clone() as ProjectionParameters);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is Camera3D d &&
@@ -49,13 +55,10 @@ namespace GDLibrary
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(base.GetHashCode(), projectionParameters);
-        }
-
-        public new object Clone()
-        {
-            return new Camera3D(this.ID, this.ActorType, this.StatusType, this.Transform3D.Clone() as Transform3D, 
-                this.projectionParameters.Clone() as ProjectionParameters);
+            HashCode hash = new HashCode();
+            hash.Add(base.GetHashCode());
+            hash.Add(projectionParameters);
+            return hash.ToHashCode();
         }
     }
 }
