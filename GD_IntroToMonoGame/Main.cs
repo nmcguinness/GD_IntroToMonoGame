@@ -10,19 +10,20 @@ namespace GDLibrary
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private BasicEffect effect;
+        private CameraManager cameraManager;
+        private ObjectManager objectManager;
+        private KeyboardManager keyboardManager;
+        private MouseManager mouseManager;
+
+        //eventually we will remove this content
         private VertexPositionColorTexture[] vertices;
         private Texture2D backSky, leftSky, rightSky, frontSky, topSky, grass;
         private PrimitiveObject archetypalTexturedQuad;
-
         private float moveSpeed = 10;
         private float strafeSpeed = 5;
         private float worldScale = 2000;
         PrimitiveObject primitiveObject = null;
-        private CameraManager cameraManager;
-        private ObjectManager objectManager;
-        private KeyboardManager keyboardManager;
-
-
+   
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -30,14 +31,9 @@ namespace GDLibrary
             IsMouseVisible = true;
         }
 
-        #region Initialization
+        #region Initialization - Managers, Cameras, Effects, Textures
         protected override void Initialize()
         {
-            //IVertexData v = new VertexData<VertexPositionColor>(verts, PrimitiveType.LineList, 1);
-            //IVertexData clone = v.Clone() as IVertexData;
-            //clone.SetPrimitiveType(PrimitiveType.TriangleList);
-
-
             // TODO: Add your initialization logic here
             Window.Title = "My Amazing Game";
 
@@ -49,7 +45,7 @@ namespace GDLibrary
             InitVertices();
             InitTextures();
             InitEffect();
-            InitPrimitives();
+            InitDrawnContent();
 
             InitGraphicsSettings(1024, 768);
 
@@ -69,6 +65,8 @@ namespace GDLibrary
             Components.Add(this.keyboardManager);
 
             //mouse
+            this.mouseManager = new MouseManager(this, true);
+            Components.Add(this.mouseManager);
         }
 
         private void InitCameras3D()
@@ -108,15 +106,11 @@ namespace GDLibrary
 
         }
 
-        private void InitPrimitives()
+        private void InitEffect()
         {
-            InitWireframeHelpers();
-            InitTexturedQuad();
-        }
-
-        private void InitWireframeHelpers()
-        {
-            //to do...add wireframe origin
+            this.effect = new BasicEffect(this._graphics.GraphicsDevice);
+            this.effect.VertexColorEnabled = true; //otherwise we wont see RGB
+            this.effect.TextureEnabled = true;
         }
 
         private void InitTextures()
@@ -135,6 +129,24 @@ namespace GDLibrary
 
             this.grass
               = Content.Load<Texture2D>("Assets/Textures/Foliage/Ground/grass1");
+        }
+        #endregion
+
+
+        #region Initialization - Vertices, Archetypes, Helpers, Drawn Content(e.g. Skybox)
+        private void InitDrawnContent() //formerly InitPrimitives
+        {
+            //add archetypes that can be cloned
+            InitPrimitiveArchetypes();
+
+            //adds origin helper etc
+            InitHelpers();
+
+            //add skybox
+            InitSkybox();
+
+            //add grass plane
+            InitGround();
         }
 
         private void InitVertices()
@@ -164,7 +176,7 @@ namespace GDLibrary
                 Color.White, new Vector2(1, 1));
         }
 
-        private void InitTexturedQuad()
+        private void InitPrimitiveArchetypes() //formerly InitTexturedQuad
         {
             Transform3D transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
@@ -176,10 +188,18 @@ namespace GDLibrary
                 this.vertices, PrimitiveType.TriangleStrip, 2);
 
             this.archetypalTexturedQuad = new PrimitiveObject("original texture quad",
-                ActorType.Decorator, 
+                ActorType.Decorator,
                 StatusType.Update | StatusType.Drawn,
                 transform3D, effectParameters, vertexData);
+        }
 
+        private void InitHelpers()
+        {
+            //to do...add wireframe origin
+        }
+
+        private void InitSkybox()
+        { 
             //back
             primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
           //  primitiveObject.StatusType = StatusType.Off; //Experiment of the effect of StatusType
@@ -218,8 +238,10 @@ namespace GDLibrary
             this.objectManager.Add(primitiveObject);
 
             //to do...front
+        }
 
-
+        private void InitGround()
+        {
             //grass
             primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
             primitiveObject.ID = "grass";
@@ -250,12 +272,7 @@ namespace GDLibrary
             this._graphics.GraphicsDevice.SamplerStates[0] = samplerState;
         }
 
-        private void InitEffect()
-        {
-            this.effect = new BasicEffect(this._graphics.GraphicsDevice);
-            this.effect.VertexColorEnabled = true; //otherwise we wont see RGB
-            this.effect.TextureEnabled = true;
-        } 
+   
 
         protected override void LoadContent()
         {

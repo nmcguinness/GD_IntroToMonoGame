@@ -41,7 +41,11 @@
 - [x] Add ObjectManager and created lists using DrawnActor3D
 - [x] Removed unnecessary GetAlpha() etc from IActor after change to ObjectManager list from IActor to DrawnActor3D
 - [x] Add CameraManager and make a GameComponent
-- [ ] Re-factor IActor::Draw and ObjectManager to use Camera3D
-- [ ] Use StatusType in ObjectManager Update and Draw
+- [x] Added use of input managers (mouse, keyboard)
+- [x] Re-factor IActor::Draw and ObjectManager to use CameraManager
+- [x] Use StatusType in ObjectManager Update and Draw
+- [ ] Added subfolders to Actor folder for drawn and camera actors
 - [ ] Add ContentDictionary
 - [ ] Add tiling functionality (see grass plane)
+- [ ] Add IController and ControllerList to Actor
+- [ ] Add 1st, Flight, Security, 3rd, and Rail camera controllers

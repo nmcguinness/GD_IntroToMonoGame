@@ -124,6 +124,11 @@ namespace GDLibrary
             //to do...
         }
 
+        public void RotateBy(Vector3 axisAndMagnitude)
+        {
+            //to do...
+        }
+
         public object Clone()
         {
             return new Transform3D(this.translation, this.rotationInDegrees, this.scale,
