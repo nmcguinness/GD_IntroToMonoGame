@@ -37,8 +37,17 @@ namespace GDLibrary
             // TODO: Add your initialization logic here
             Window.Title = "My Amazing Game";
 
+            //camera
             this.cameraManager = new CameraManager(this);
             Components.Add(this.cameraManager);
+
+            //keyboard
+            this.keyboardManager = new KeyboardManager(this);
+            Components.Add(this.keyboardManager);
+
+            //mouse
+            this.mouseManager = new MouseManager(this, true);
+            Components.Add(this.mouseManager);
 
             InitCameras3D();
             InitManagers();
@@ -54,30 +63,29 @@ namespace GDLibrary
 
         private void InitManagers()
         {
-           // this.cameraManager = new CameraManager();
-
-
             this.objectManager = new ObjectManager(this, 6, 10, this.cameraManager);
             Components.Add(this.objectManager);
-
-            //keyboard
-            this.keyboardManager = new KeyboardManager(this);
-            Components.Add(this.keyboardManager);
-
-            //mouse
-            this.mouseManager = new MouseManager(this, true);
-            Components.Add(this.mouseManager);
         }
 
         private void InitCameras3D()
         {
+            Transform3D transform3D = null;
+            Camera3D camera3D = null;
+
             #region Camera 1
-            Transform3D transform3D = new Transform3D(new Vector3(10, 10, 20),
+            transform3D = new Transform3D(new Vector3(10, 10, 20),
                 new Vector3(0, 0, -1), Vector3.UnitY);
 
-            this.cameraManager.Add(new Camera3D("simple 1st person", 
+            camera3D = new Camera3D("simple 1st person",
                 ActorType.Camera3D, StatusType.Update, transform3D,
-                ProjectionParameters.StandardDeepSixteenTen));
+                ProjectionParameters.StandardDeepSixteenTen);
+
+            //attach a controller
+            camera3D.ControllerList.Add(new FirstPersonCameraController(this.keyboardManager));
+
+            this.cameraManager.Add(camera3D);
+
+
             #endregion
 
             #region Camera 2 - fallen on its side to -ve X-axis
@@ -322,17 +330,9 @@ namespace GDLibrary
                 this.cameraManager.ActiveCameraIndex++;
 
 
-            Camera3D activeCamera = this.cameraManager.ActiveCamera;
-            if (this.keyboardManager.IsKeyDown(Keys.W))
-                activeCamera.Transform3D.TranslateBy(activeCamera.Transform3D.Look * 0.1f);
-
-
-
-
-
-
-
-
+            //Camera3D activeCamera = this.cameraManager.ActiveCamera;
+            //if (this.keyboardManager.IsKeyDown(Keys.W))
+            //    activeCamera.Transform3D.TranslateBy(activeCamera.Transform3D.Look * 0.1f);
 
                 base.Update(gameTime);
         }

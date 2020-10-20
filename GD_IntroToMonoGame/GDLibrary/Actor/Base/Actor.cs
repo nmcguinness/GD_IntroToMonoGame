@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace GDLibrary
 {
@@ -10,9 +11,23 @@ namespace GDLibrary
         private string id, description;
         private ActorType actorType;
         private StatusType statusType;
+        private List<IController> controllerList = new List<IController>();
         #endregion
 
         #region Properties
+        public List<IController> ControllerList
+        {
+            get
+            {
+                return this.controllerList;
+            }
+            set
+            {
+                this.controllerList = value;
+            }
+        }
+
+
         public string ID
         {
             get
@@ -73,7 +88,9 @@ namespace GDLibrary
 
         public virtual void Update(GameTime gameTime)
         {
-            //do nothing - see child implementation
+            //calls update on any attached controllers
+            foreach (IController controller in this.controllerList)
+                controller.Update(gameTime, this);
         }
 
         public virtual void Draw(GameTime gameTime, Camera3D camera, GraphicsDevice graphicsDevice)
