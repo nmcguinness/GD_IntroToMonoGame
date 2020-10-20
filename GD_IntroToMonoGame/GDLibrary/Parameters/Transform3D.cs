@@ -75,6 +75,9 @@ namespace GDLibrary
                 this.translation = value;
             } 
         }
+
+        private Vector3 originalRotationInDegrees;
+
         public Vector3 RotationInDegrees
         {
             get
@@ -110,7 +113,7 @@ namespace GDLibrary
             Vector3 scale, Vector3 look, Vector3 up)
         {
             this.Translation = translation;
-            this.RotationInDegrees = rotationInDegrees;
+            this.originalRotationInDegrees = this.RotationInDegrees = rotationInDegrees;
             this.Scale = scale;
             this.originalLook = this.Look = look;
             this.originalUp = this.Up = up;
@@ -128,16 +131,19 @@ namespace GDLibrary
 
         public void RotateBy(Vector3 axisAndMagnitude)
         {
-            //explain: yaw, pitch, roll
-            Matrix rotMatrix = Matrix.CreateFromYawPitchRoll(
-                MathHelper.ToRadians(axisAndMagnitude.X),
-                MathHelper.ToRadians(axisAndMagnitude.Y),
-                MathHelper.ToRadians(axisAndMagnitude.Z));
+            //add this statement to allow us to add/subtract from whatever the current rotation is
+            Vector3 rotation = this.originalRotationInDegrees + axisAndMagnitude;
 
+            //explain: yaw, pitch, roll
+            //create a new "XYZ" axis to rotate around using the (x,y,0) values from mouse and any current rotation
+            Matrix rotMatrix = Matrix.CreateFromYawPitchRoll(
+                MathHelper.ToRadians(rotation.X),
+                MathHelper.ToRadians(rotation.Y),
+                MathHelper.ToRadians(rotation.Z));
+
+            //update the look and up vector (i.e. rotate them both around this new "XYZ" axis)
             this.look = Vector3.Transform(this.originalLook, rotMatrix);
             this.up = Vector3.Transform(this.originalUp, rotMatrix);
-
-            //change look, up
         }
 
         public object Clone()

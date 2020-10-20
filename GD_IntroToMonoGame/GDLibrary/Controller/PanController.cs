@@ -24,7 +24,7 @@ namespace GD_IntroToMonoGame.GDLibrary.Controller.Camera
 
         public object Clone()
         {
-            //to do...
+            return null;
         }
     }
 }

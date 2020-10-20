@@ -19,8 +19,6 @@ namespace GDLibrary
         private VertexPositionColorTexture[] vertices;
         private Texture2D backSky, leftSky, rightSky, frontSky, topSky, grass;
         private PrimitiveObject archetypalTexturedQuad;
-        private float moveSpeed = 10;
-        private float strafeSpeed = 5;
         private float worldScale = 2000;
         PrimitiveObject primitiveObject = null;
    
