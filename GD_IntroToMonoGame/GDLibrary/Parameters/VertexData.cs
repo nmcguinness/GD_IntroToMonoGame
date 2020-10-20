@@ -36,6 +36,9 @@ namespace GDLibrary
 
         public void Draw(GameTime gameTime, BasicEffect effect, GraphicsDevice graphicsDevice)
         {
+            //serialising the vertices from RAM to VRAM
+            //constrained by the bandwidth of the bus and 
+            //by the lower of the two clock speeds (cpu, gpu)
             graphicsDevice.DrawUserPrimitives<T>(this.primitiveType,
                 this.vertices, 0, this.primitiveCount);
         }

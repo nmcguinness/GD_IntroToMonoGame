@@ -319,7 +319,20 @@ namespace GDLibrary
                 Exit();
 
             if (this.keyboardManager.IsFirstKeyPress(Keys.C))
-                this.cameraManager.ActiveCameraIndex++;                                                                 
+                this.cameraManager.ActiveCameraIndex++;
+
+
+            Camera3D activeCamera = this.cameraManager.ActiveCamera;
+            if (this.keyboardManager.IsKeyDown(Keys.W))
+                activeCamera.Transform3D.TranslateBy(activeCamera.Transform3D.Look * 0.1f);
+
+
+
+
+
+
+
+
 
                 base.Update(gameTime);
         }

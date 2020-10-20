@@ -32,13 +32,24 @@ namespace GDLibrary
         #endregion
 
         #region Constructors
-        public Camera3D(string id, ActorType actorType, StatusType statusType, Transform3D transform3D, 
+        public Camera3D(string id, ActorType actorType, StatusType statusType, 
+            Transform3D transform3D, 
                     ProjectionParameters projectionParameters)
             : base(id, actorType, statusType, transform3D)
         {
             this.projectionParameters = projectionParameters;
         }
         #endregion
+
+
+        public override void Update(GameTime gameTime)
+        {
+            //check for keyboard input?
+            //if input, then modify transform
+          //  this.controller.Update(gameTime, this);
+
+            base.Update(gameTime);
+        }
 
         public new object Clone()
         {
