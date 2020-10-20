@@ -9,7 +9,7 @@ namespace GDLibrary
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private BasicEffect effect;
+        private BasicEffect unlitTexturedEffect, unlitWireframeEffect;
         private CameraManager cameraManager;
         private ObjectManager objectManager;
         private KeyboardManager keyboardManager;
@@ -72,7 +72,7 @@ namespace GDLibrary
         private void InitCameras3D()
         {
             #region Camera 1
-            Transform3D transform3D = new Transform3D(new Vector3(0, 50, 10),
+            Transform3D transform3D = new Transform3D(new Vector3(10, 10, 20),
                 new Vector3(0, 0, -1), Vector3.UnitY);
 
             this.cameraManager.Add(new Camera3D("simple 1st person", 
@@ -81,7 +81,7 @@ namespace GDLibrary
             #endregion
 
             #region Camera 2 - fallen on its side to -ve X-axis
-            transform3D = new Transform3D(new Vector3(0, 50, 10),
+            transform3D = new Transform3D(new Vector3(0, 10, 10),
                         new Vector3(0, 0, -1), 
                         -Vector3.UnitX);
 
@@ -108,9 +108,14 @@ namespace GDLibrary
 
         private void InitEffect()
         {
-            this.effect = new BasicEffect(this._graphics.GraphicsDevice);
-            this.effect.VertexColorEnabled = true; //otherwise we wont see RGB
-            this.effect.TextureEnabled = true;
+            //to do...
+            this.unlitTexturedEffect = new BasicEffect(this._graphics.GraphicsDevice);
+            this.unlitTexturedEffect.VertexColorEnabled = true; //otherwise we wont see RGB
+            this.unlitTexturedEffect.TextureEnabled = true;
+
+            //wireframe primitives with no lighting and no texture
+            this.unlitWireframeEffect = new BasicEffect(this._graphics.GraphicsDevice);
+            this.unlitWireframeEffect.VertexColorEnabled = true;
         }
 
         private void InitTextures()
@@ -131,7 +136,6 @@ namespace GDLibrary
               = Content.Load<Texture2D>("Assets/Textures/Foliage/Ground/grass1");
         }
         #endregion
-
 
         #region Initialization - Vertices, Archetypes, Helpers, Drawn Content(e.g. Skybox)
         private void InitDrawnContent() //formerly InitPrimitives
@@ -181,7 +185,7 @@ namespace GDLibrary
             Transform3D transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
 
-            EffectParameters effectParameters = new EffectParameters(this.effect,
+            EffectParameters effectParameters = new EffectParameters(this.unlitTexturedEffect,
                 this.grass, /*bug*/ Color.White, 1);
 
             IVertexData vertexData = new VertexData<VertexPositionColorTexture>(
@@ -193,9 +197,36 @@ namespace GDLibrary
                 transform3D, effectParameters, vertexData);
         }
 
+        //VertexPositionColorTexture - 4 bytes x 3 (x,y,z) + 4 bytes x 3 (r,g,b) + 4bytes x 2 = 26 bytes
+        //VertexPositionColor -  4 bytes x 3 (x,y,z) + 4 bytes x 3 (r,g,b) = 24 bytes
         private void InitHelpers()
         {
             //to do...add wireframe origin
+            PrimitiveType primitiveType;
+            int primitiveCount;
+
+            //step 1 - vertices
+            VertexPositionColor[] vertices = VertexFactory.GetVerticesPositionColorOriginHelper(
+                                    out primitiveType, out primitiveCount);
+
+            //step 2 - make vertex data that provides Draw()
+            IVertexData vertexData = new VertexData<VertexPositionColor>(vertices, 
+                                    primitiveType, primitiveCount);
+
+            //step 3 - make the primitive object
+            Transform3D transform3D = new Transform3D(new Vector3(0, 10, 0),
+                Vector3.Zero, new Vector3(10, 10, 10),
+                Vector3.UnitZ, Vector3.UnitY);
+
+            EffectParameters effectParameters = new EffectParameters(this.unlitWireframeEffect,
+                null, Color.White, 1);
+
+            //at this point, we're ready!
+            PrimitiveObject primitiveObject = new PrimitiveObject("origin helper",
+                ActorType.Helper, StatusType.Drawn, transform3D, effectParameters, vertexData);
+
+            this.objectManager.Add(primitiveObject);
+
         }
 
         private void InitSkybox()

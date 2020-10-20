@@ -36,7 +36,8 @@ namespace GDLibrary
             return vertices;
         }
 
-        public static VertexPositionColor[] GetVerticesPositionColorOriginHelper(out PrimitiveType primitiveType, out int primitiveCount)
+        public static VertexPositionColor[] GetVerticesPositionColorOriginHelper(
+            out PrimitiveType primitiveType, out int primitiveCount)
         {
             primitiveType = PrimitiveType.LineList;
             primitiveCount = 10;

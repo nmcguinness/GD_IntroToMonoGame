@@ -9,6 +9,8 @@
         Pickups,
 
         Camera2D,
-        Camera3D
+        Camera3D,
+
+        Helper
     }
 }

@@ -55,8 +55,12 @@ namespace GDLibrary
                 if((actor.StatusType & StatusType.Update) == StatusType.Update)
                     actor.Update(gameTime);
             }
-               
-        //    base.Update(gameTime);
+
+            foreach (DrawnActor3D actor in this.transparentList)
+            {
+                if ((actor.StatusType & StatusType.Update) == StatusType.Update)
+                    actor.Update(gameTime);
+            }
         }
 
         public override void Draw(GameTime gameTime)
@@ -65,12 +69,17 @@ namespace GDLibrary
             {
                 if ((actor.StatusType & StatusType.Drawn) == StatusType.Drawn)
                     actor.Draw(gameTime, 
-                       // this.cameraManager[this.cameraManager.ActiveCameraIndex],
                        this.cameraManager.ActiveCamera,
                         this.GraphicsDevice);
             }
 
-        //    base.Draw(gameTime);
+            foreach (DrawnActor3D actor in this.transparentList)
+            {
+                if ((actor.StatusType & StatusType.Drawn) == StatusType.Drawn)
+                    actor.Draw(gameTime,
+                       this.cameraManager.ActiveCamera,
+                        this.GraphicsDevice);
+            }
         }
 
 

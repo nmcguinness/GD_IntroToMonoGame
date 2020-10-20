@@ -132,7 +132,11 @@ namespace GDLibrary
             this.effect.World = world;
             this.effect.View = camera.View;
             this.effect.Projection = camera.Projection;
-            this.effect.Texture = this.texture;
+
+            //if no texture, then dont crash!
+            if(this.texture != null)
+                this.effect.Texture = this.texture;
+
             //to do - diffuse and alpha are not applied
             this.effect.DiffuseColor = this.diffuseColor.ToVector3();
             this.effect.Alpha = this.alpha;
