@@ -11,6 +11,8 @@ namespace GDLibrary
     {
         private Vector3 translation, rotationInDegrees, scale;
         private Vector3 look, up; //right = look x up
+        private Vector3 originalLook;
+        private Vector3 originalUp;
 
         public Matrix World
         {
@@ -110,8 +112,8 @@ namespace GDLibrary
             this.Translation = translation;
             this.RotationInDegrees = rotationInDegrees;
             this.Scale = scale;
-            this.Look = look;
-            this.Up = up;
+            this.originalLook = this.Look = look;
+            this.originalUp = this.Up = up;
         }
 
         public void TranslateBy(Vector3 delta)
@@ -126,7 +128,16 @@ namespace GDLibrary
 
         public void RotateBy(Vector3 axisAndMagnitude)
         {
-            //to do...
+            //explain: yaw, pitch, roll
+            Matrix rotMatrix = Matrix.CreateFromYawPitchRoll(
+                MathHelper.ToRadians(axisAndMagnitude.X),
+                MathHelper.ToRadians(axisAndMagnitude.Y),
+                MathHelper.ToRadians(axisAndMagnitude.Z));
+
+            this.look = Vector3.Transform(this.originalLook, rotMatrix);
+            this.up = Vector3.Transform(this.originalUp, rotMatrix);
+
+            //change look, up
         }
 
         public object Clone()

@@ -45,8 +45,9 @@ namespace GDLibrary
             this.keyboardManager = new KeyboardManager(this);
             Components.Add(this.keyboardManager);
 
+           // this.IsMouseVisible = false;
             //mouse
-            this.mouseManager = new MouseManager(this, true);
+            this.mouseManager = new MouseManager(this, false);
             Components.Add(this.mouseManager);
 
             InitCameras3D();
@@ -81,7 +82,9 @@ namespace GDLibrary
                 ProjectionParameters.StandardDeepSixteenTen);
 
             //attach a controller
-            camera3D.ControllerList.Add(new FirstPersonCameraController(this.keyboardManager));
+            camera3D.ControllerList.Add(new FirstPersonCameraController(
+                this.keyboardManager, this.mouseManager,
+                1, 0.8f, 0.008f));
 
             this.cameraManager.Add(camera3D);
 
@@ -95,7 +98,7 @@ namespace GDLibrary
 
             this.cameraManager.Add(new Camera3D("fallen over 1st person", 
                 ActorType.Camera3D, StatusType.Update, transform3D,
-            ProjectionParameters.StandardDeepSixteenTen));
+            ProjectionParameters.StandardDeepFourThree));
             #endregion
 
 
@@ -222,7 +225,7 @@ namespace GDLibrary
                                     primitiveType, primitiveCount);
 
             //step 3 - make the primitive object
-            Transform3D transform3D = new Transform3D(new Vector3(0, 10, 0),
+            Transform3D transform3D = new Transform3D(new Vector3(0, 20, 0),
                 Vector3.Zero, new Vector3(10, 10, 10),
                 Vector3.UnitZ, Vector3.UnitY);
 
