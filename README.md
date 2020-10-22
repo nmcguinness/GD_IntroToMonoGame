@@ -44,8 +44,8 @@
 - [x] Added use of input managers (mouse, keyboard)
 - [x] Re-factor IActor::Draw and ObjectManager to use CameraManager
 - [x] Use StatusType in ObjectManager Update and Draw
-- [ ] Added subfolders to Actor folder for drawn and camera actors
+- [x] Added subfolders to Actor folder for drawn and camera actors
 - [ ] Add ContentDictionary
 - [ ] Add tiling functionality (see grass plane)
-- [ ] Add IController and ControllerList to Actor
+- [x] Add IController and ControllerList to Actor
 - [ ] Add 1st, Flight, Security, 3rd, and Rail camera controllers
