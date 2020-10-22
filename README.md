@@ -52,3 +52,5 @@
 - [x] Add IController and ControllerList to Actor
 - [ ] Add 1st, Flight, Pan (Security), 3rd, and Rail camera controllers
 - [ ] Add ModelObject
+- [ ] Add GDConstants and move "magic-number" hard-coded values
+- [ ] Remove hard-coded (512, 384) in Controller and replace with screenCentre
