@@ -6,12 +6,14 @@
 - [ ] Explain effect of SamplerState on on-screen aliasing
 - [ ] Explain and use VertexFactory
 - [ ] Explain new input manager classes (MouseManager, KeyboardManager, GamePadManager)
-- [ ] Explain and use IController and the classes which implement it.
+- [x] Explain and use IController and the classes which implement it.
 - [x] Create a simple enum using 2^N values on the enum values and demonstrate bitwise operators.
+- [ ] Explain ModelObject
 
 ### Refactor for Efficiency
 - [ ] Improve efficiency of ProjectionParameters::Projection property by adding isDirty flag
 - [ ] Improve efficiency of Transform3D::World property by adding isDirty flag
+- [ ] Improve efficiency of Camera3D::View property by adding isDirty flag
 - [ ] Add validation to appropriate set properties
 
 ### Tasks - Week 2 
@@ -48,4 +50,5 @@
 - [ ] Add ContentDictionary
 - [ ] Add tiling functionality (see grass plane)
 - [x] Add IController and ControllerList to Actor
-- [ ] Add 1st, Flight, Security, 3rd, and Rail camera controllers
+- [ ] Add 1st, Flight, Pan (Security), 3rd, and Rail camera controllers
+- [ ] Add ModelObject
