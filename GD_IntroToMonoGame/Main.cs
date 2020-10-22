@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace GDLibrary
 {
@@ -82,7 +81,7 @@ namespace GDLibrary
             //attach a controller
             camera3D.ControllerList.Add(new FirstPersonCameraController(
                 this.keyboardManager, this.mouseManager,
-                1, 0.8f, 0.008f));
+                GDConstants.moveSpeed, GDConstants.strafeSpeed, GDConstants.rotateSpeed));
 
             this.cameraManager.Add(camera3D);
 
@@ -96,7 +95,7 @@ namespace GDLibrary
 
             this.cameraManager.Add(new Camera3D("fallen over 1st person", 
                 ActorType.Camera3D, StatusType.Update, transform3D,
-            ProjectionParameters.StandardDeepFourThree));
+            ProjectionParameters.StandardDeepSixteenTen));
             #endregion
 
 
@@ -109,6 +108,20 @@ namespace GDLibrary
               ActorType.Camera3D, StatusType.Update, transform3D,
           ProjectionParameters.StandardDeepSixteenTen));
 
+            #region Camera 4 - security
+            transform3D = new Transform3D(new Vector3(10, 10, 50),
+                        new Vector3(0, 0, -1),
+                        Vector3.UnitY);
+
+            camera3D = new Camera3D("security",
+                ActorType.Camera3D, StatusType.Update, transform3D,
+            ProjectionParameters.StandardDeepSixteenTen);
+
+            camera3D.ControllerList.Add(new PanController(new Vector3(1, 1, 0), 
+                                            30, GDConstants.mediumAngularSpeed, 0));
+            this.cameraManager.Add(camera3D);
+
+            #endregion
 
             #endregion
             this.cameraManager.ActiveCameraIndex = 0; //0, 1, 2
@@ -160,6 +173,29 @@ namespace GDLibrary
 
             //add grass plane
             InitGround();
+
+            //models
+            InitStaticModel();
+
+        }
+
+        private void InitStaticModel()
+        {
+            //add a ModelObject
+            BasicEffect modelEffect = new BasicEffect(this._graphics.GraphicsDevice);
+            modelEffect.TextureEnabled = true;
+
+            //transform
+
+            //effectparameters
+
+            //model
+            Model boxModel = Content.Load<Model>("Assets/Models/box2");
+
+         //   ModelObject boxObject = new ModelObject();
+
+         //   this.objectManager.Add(boxObject);
+
         }
 
         private void InitVertices()
