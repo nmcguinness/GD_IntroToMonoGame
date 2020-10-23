@@ -13,6 +13,13 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Assets/Fonts/File.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Assets/Fonts/File.spritefont;Assets/Fonts/debug.spritefont
+
 #begin Assets/Models/box2.FBX
 /importer:FbxImporter
 /processor:ModelProcessor

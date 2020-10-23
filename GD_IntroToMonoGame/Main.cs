@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace GDLibrary
 {
@@ -22,6 +23,7 @@ namespace GDLibrary
         PrimitiveObject primitiveObject = null;
         Vector2 screenCentre = Vector2.Zero;
         private BasicEffect modelEffect;
+        private SpriteFont debugFont;
 
         public Main()
         {
@@ -52,12 +54,25 @@ namespace GDLibrary
             InitManagers();
             InitVertices();
             InitTextures();
+            InitFonts();
             InitEffect();
             InitDrawnContent();
 
             InitGraphics(1024, 768);
-
+           
             base.Initialize();
+        }
+
+        private void InitDebug()
+        {
+            Components.Add(new DebugDrawer(this, _spriteBatch, this.debugFont,
+                this.cameraManager, this.objectManager));
+
+        }
+
+        private void InitFonts()
+        {
+            this.debugFont = Content.Load<SpriteFont>("Assets/Fonts/debug");
         }
 
         private void InitManagers()
@@ -75,7 +90,7 @@ namespace GDLibrary
             transform3D = new Transform3D(new Vector3(10, 10, 20),
                 new Vector3(0, 0, -1), Vector3.UnitY);
 
-            camera3D = new Camera3D("simple 1st person",
+            camera3D = new Camera3D("1st person",
                 ActorType.Camera3D, StatusType.Update, transform3D,
                 ProjectionParameters.StandardDeepSixteenTen);
 
@@ -91,7 +106,7 @@ namespace GDLibrary
                         new Vector3(0, 0, -1), 
                         Vector3.UnitY);
 
-            camera3D = new Camera3D("simple 1st person",
+            camera3D = new Camera3D("flight person",
                 ActorType.Camera3D, StatusType.Update, transform3D,
                 ProjectionParameters.StandardDeepSixteenTen);
 
@@ -378,6 +393,7 @@ namespace GDLibrary
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            InitDebug();
         }
 
         protected override void UnloadContent()
@@ -405,6 +421,7 @@ namespace GDLibrary
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             base.Draw(gameTime);
+
         }
 
         #endregion
