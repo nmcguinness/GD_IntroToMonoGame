@@ -18,9 +18,11 @@ namespace GDLibrary
         private VertexPositionColorTexture[] vertices;
         private Texture2D backSky, leftSky, rightSky, frontSky, topSky, grass;
         private PrimitiveObject archetypalTexturedQuad;
-        private float worldScale = 2000;
+        private float worldScale = 3000;
         PrimitiveObject primitiveObject = null;
-   
+        Vector2 screenCentre = Vector2.Zero;
+        private BasicEffect modelEffect;
+
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -42,7 +44,6 @@ namespace GDLibrary
             this.keyboardManager = new KeyboardManager(this);
             Components.Add(this.keyboardManager);
 
-           // this.IsMouseVisible = false;
             //mouse
             this.mouseManager = new MouseManager(this, false);
             Components.Add(this.mouseManager);
@@ -54,7 +55,7 @@ namespace GDLibrary
             InitEffect();
             InitDrawnContent();
 
-            InitGraphicsSettings(1024, 768);
+            InitGraphics(1024, 768);
 
             base.Initialize();
         }
@@ -70,7 +71,7 @@ namespace GDLibrary
             Transform3D transform3D = null;
             Camera3D camera3D = null;
 
-            #region Camera 1
+            #region Camera - First Person
             transform3D = new Transform3D(new Vector3(10, 10, 20),
                 new Vector3(0, 0, -1), Vector3.UnitY);
 
@@ -82,33 +83,26 @@ namespace GDLibrary
             camera3D.ControllerList.Add(new FirstPersonCameraController(
                 this.keyboardManager, this.mouseManager,
                 GDConstants.moveSpeed, GDConstants.strafeSpeed, GDConstants.rotateSpeed));
-
             this.cameraManager.Add(camera3D);
-
-
             #endregion
 
-            #region Camera 2 - fallen on its side to -ve X-axis
+            #region Camera - Flight
             transform3D = new Transform3D(new Vector3(0, 10, 10),
                         new Vector3(0, 0, -1), 
-                        -Vector3.UnitX);
+                        Vector3.UnitY);
 
-            this.cameraManager.Add(new Camera3D("fallen over 1st person", 
+            camera3D = new Camera3D("simple 1st person",
                 ActorType.Camera3D, StatusType.Update, transform3D,
-            ProjectionParameters.StandardDeepSixteenTen));
+                ProjectionParameters.StandardDeepSixteenTen);
+
+            //attach a controller
+            camera3D.ControllerList.Add(new FlightCameraController(
+                this.keyboardManager, this.mouseManager,
+                GDConstants.moveSpeed, GDConstants.strafeSpeed, GDConstants.rotateSpeed));
+            this.cameraManager.Add(camera3D);
             #endregion
 
-
-            #region Camera 3
-            transform3D = new Transform3D(new Vector3(0, 250, 100),
-                       new Vector3(0, -1, -1), //look
-                       new Vector3(0, 1,-1)); //up
-
-            this.cameraManager.Add(new Camera3D("giant looking down 1st person",
-              ActorType.Camera3D, StatusType.Update, transform3D,
-          ProjectionParameters.StandardDeepSixteenTen));
-
-            #region Camera 4 - security
+            #region Camera - Security
             transform3D = new Transform3D(new Vector3(10, 10, 50),
                         new Vector3(0, 0, -1),
                         Vector3.UnitY);
@@ -120,11 +114,20 @@ namespace GDLibrary
             camera3D.ControllerList.Add(new PanController(new Vector3(1, 1, 0), 
                                             30, GDConstants.mediumAngularSpeed, 0));
             this.cameraManager.Add(camera3D);
-
             #endregion
 
+            #region Camera - Giant
+            transform3D = new Transform3D(new Vector3(0, 250, 100),
+                       new Vector3(0, -1, -1), //look
+                       new Vector3(0, 1, -1)); //up
+
+            this.cameraManager.Add(new Camera3D("giant looking down 1st person",
+              ActorType.Camera3D, StatusType.Update, transform3D,
+          ProjectionParameters.StandardDeepSixteenTen));
+            this.cameraManager.Add(camera3D);
             #endregion
-            this.cameraManager.ActiveCameraIndex = 0; //0, 1, 2
+
+            this.cameraManager.ActiveCameraIndex = 0; //0, 1, 2, 3
 
         }
 
@@ -138,6 +141,13 @@ namespace GDLibrary
             //wireframe primitives with no lighting and no texture
             this.unlitWireframeEffect = new BasicEffect(this._graphics.GraphicsDevice);
             this.unlitWireframeEffect.VertexColorEnabled = true;
+
+            //model effect
+            //add a ModelObject
+            this.modelEffect = new BasicEffect(this._graphics.GraphicsDevice);
+            this.modelEffect.TextureEnabled = true;
+            //this.modelEffect.LightingEnabled = true;
+            //this.modelEffect.EnableDefaultLighting();
         }
 
         private void InitTextures()
@@ -175,26 +185,32 @@ namespace GDLibrary
             InitGround();
 
             //models
-            InitStaticModel();
+            InitStaticModels();
 
         }
 
-        private void InitStaticModel()
+        private void InitStaticModels()
         {
-            //add a ModelObject
-            BasicEffect modelEffect = new BasicEffect(this._graphics.GraphicsDevice);
-            modelEffect.TextureEnabled = true;
-
             //transform
+            Transform3D transform3D = new Transform3D(new Vector3(0, 5, 0),
+                                new Vector3(0, 0, 45),       //rotation
+                                new Vector3(1, 1, 1),        //scale
+                                    -Vector3.UnitZ,         //look
+                                    Vector3.UnitY);         //up
 
             //effectparameters
+            EffectParameters effectParameters = new EffectParameters(modelEffect,
+                Content.Load<Texture2D>("Assets/Textures/Props/Crates/crate1"),
+                Color.White, 1);
 
             //model
-            Model boxModel = Content.Load<Model>("Assets/Models/box2");
+            Model model = Content.Load<Model>("Assets/Models/box2");
 
-         //   ModelObject boxObject = new ModelObject();
-
-         //   this.objectManager.Add(boxObject);
+            //model object
+            ModelObject archetypalBoxObject = new ModelObject("car", ActorType.Player,
+                StatusType.Drawn | StatusType.Update, transform3D,
+                effectParameters, model);
+            this.objectManager.Add(archetypalBoxObject);
 
         }
 
@@ -314,6 +330,14 @@ namespace GDLibrary
             this.objectManager.Add(primitiveObject);
 
             //to do...front
+            primitiveObject = this.archetypalTexturedQuad.Clone() as PrimitiveObject;
+            primitiveObject.ID = "sky front";
+            primitiveObject.EffectParameters.Texture = this.frontSky;
+            primitiveObject.Transform3D.Scale = new Vector3(worldScale, worldScale, 1);
+            primitiveObject.Transform3D.RotationInDegrees = new Vector3(0, 180, 0);
+            primitiveObject.Transform3D.Translation = new Vector3(0, 0, worldScale / 2.0f);
+            this.objectManager.Add(primitiveObject);
+
         }
 
         private void InitGround()
@@ -327,7 +351,7 @@ namespace GDLibrary
             this.objectManager.Add(primitiveObject);
         }
 
-        private void InitGraphicsSettings(int width, int height)
+        private void InitGraphics(int width, int height)
         {
             //set resolution
             this._graphics.PreferredBackBufferWidth = width;
@@ -335,6 +359,9 @@ namespace GDLibrary
 
             //dont forget to apply resolution changes otherwise we wont see the new WxH
             this._graphics.ApplyChanges();
+
+            //set screen centre based on resolution
+            this.screenCentre = new Vector2(width / 2, height / 2);
 
             //set cull mode to show front and back faces - inefficient but we will change later
             RasterizerState rs = new RasterizerState();
@@ -348,13 +375,15 @@ namespace GDLibrary
             this._graphics.GraphicsDevice.SamplerStates[0] = samplerState;
         }
 
-   
-
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+        }
         #endregion
 
         #region Update & Draw
@@ -364,12 +393,8 @@ namespace GDLibrary
                 Exit();
 
             if (this.keyboardManager.IsFirstKeyPress(Keys.C))
-                this.cameraManager.ActiveCameraIndex++;
-
-
-            //Camera3D activeCamera = this.cameraManager.ActiveCamera;
-            //if (this.keyboardManager.IsKeyDown(Keys.W))
-            //    activeCamera.Transform3D.TranslateBy(activeCamera.Transform3D.Look * 0.1f);
+                this.cameraManager.CycleActiveCamera();
+               // this.cameraManager.ActiveCameraIndex++;
 
                 base.Update(gameTime);
         }
@@ -378,6 +403,7 @@ namespace GDLibrary
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
             base.Draw(gameTime);
         }
 

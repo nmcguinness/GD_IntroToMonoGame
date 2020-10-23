@@ -70,15 +70,13 @@ namespace GDLibrary
         {
             this.EffectParameters.Effect.View = camera.View;
             this.EffectParameters.Effect.Projection = camera.Projection;
+            this.EffectParameters.Effect.DiffuseColor = this.EffectParameters.DiffuseColor.ToVector3();
             this.EffectParameters.Effect.Alpha = this.EffectParameters.Alpha;
             this.EffectParameters.Effect.CurrentTechnique.Passes[0].Apply();
 
             //Not all models NEED a texture. Does a semi-transparent window need a texture?
             if (this.EffectParameters.Texture != null)
-            {
-                this.EffectParameters.Effect.TextureEnabled = true;
                 this.EffectParameters.Effect.Texture = this.EffectParameters.Texture;
-            }
 
             foreach (ModelMesh mesh in this.model.Meshes)
             {
@@ -94,8 +92,22 @@ namespace GDLibrary
 
         public new object Clone()
         {
-            //to do...
-            return null;
+            ModelObject actor = new ModelObject("clone - " + ID, //deep
+               this.ActorType,   //deep
+               this.StatusType,
+               this.Transform3D.Clone() as Transform3D,  //deep
+               this.EffectParameters.Clone() as EffectParameters, //hybrid - shallow (texture and effect) and deep (all other fields) 
+               this.model); //shallow i.e. a reference
+
+            //remember if we clone a model then we need to clone any attached controllers
+            if (this.ControllerList != null)
+            {
+                //clone each of the (behavioural) controllers
+                foreach (IController controller in this.ControllerList)
+                    actor.ControllerList.Add(controller.Clone() as IController);
+            }
+
+            return actor;
         }
     }
 }

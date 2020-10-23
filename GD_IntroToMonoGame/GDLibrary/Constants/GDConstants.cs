@@ -15,9 +15,10 @@ namespace GDLibrary
         private static readonly float strafeSpeedMultiplier = 0.75f;
         public static readonly float moveSpeed = 0.1f;
         public static readonly float strafeSpeed = strafeSpeedMultiplier * moveSpeed;
-        public static readonly float rotateSpeed = 0.008f;
+        public static readonly float rotateSpeed = 0.01f;
         //keys
-        public static readonly Keys[] playerOneKeys = { Keys.W, Keys.S, Keys.A, Keys.D };
+        public static readonly Keys[] KeysOne = { Keys.W, Keys.S, Keys.A, Keys.D };
+        public static readonly Keys[] KeysTwo = { Keys.U, Keys.J, Keys.H, Keys.K };
         #endregion
 
 
